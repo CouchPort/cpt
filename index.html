@@ -458,9 +458,15 @@
       overflow: hidden;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 28px var(--glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       margin-bottom: 2rem;
-      transform: translateY(0);
+      transform: translateY(22px) scale(0.985);
+      opacity: 0;
+      filter: blur(8px);
+      transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s ease, filter 0.38s ease, border-color 0.3s ease, background 0.4s ease, box-shadow 0.4s ease;
+    }
+    .section-card-wrapper.visible {
+      transform: translateY(0) scale(1);
       opacity: 1;
-      transition: border-color 0.3s ease, background 0.4s ease, box-shadow 0.4s ease;
+      filter: blur(0px);
     }
     .section-card-wrapper:hover {
       border-color: var(--border-glow);
@@ -495,6 +501,7 @@
       display: flex;
       align-items: center;
       gap: 0.7rem;
+      flex-wrap: wrap;
     }
     .section-icon {
       font-size: 1.4rem;
@@ -509,6 +516,22 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5));
+    }
+
+    .section-subtag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent-1) 16%, rgba(0, 0, 0, 0.45));
+      border: 1px solid var(--pill-border);
+      color: var(--text);
+      box-shadow: 0 2px 12px var(--glow);
+      letter-spacing: 0.01em;
     }
 
     .count-pill {
@@ -541,7 +564,7 @@
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 0.9rem 0.9rem 1.35rem;
+      padding: 1.15rem 0.9rem 1.35rem;
       color: var(--text);
       display: flex;
       flex-direction: column;
@@ -553,6 +576,18 @@
       transform-style: preserve-3d;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 12px var(--glow);
       transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      animation: cardCascade 0.36s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+
+    @keyframes cardCascade {
+      0% {
+        opacity: 0;
+        transform: perspective(1000px) translateY(16px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: perspective(1000px) translateY(0) scale(1);
+      }
     }
 
     .link-card::before {
@@ -675,88 +710,92 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
-    .badge.trusted {
-      background: color-mix(in srgb, var(--accent-1) 12%, rgba(0, 0, 0, 0.55)) !important;
+    .badge.dub {
+      background: color-mix(in srgb, var(--accent-1) 14%, rgba(0, 0, 0, 0.6)) !important;
       color: var(--accent-1);
-      border: 1px solid color-mix(in srgb, var(--accent-1) 45%, transparent);
-      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent-1) 18%, transparent);
-    }
-    .badge.new {
-      background: color-mix(in srgb, var(--accent-3) 12%, rgba(0, 0, 0, 0.55)) !important;
-      color: var(--accent-3);
-      border: 1px solid color-mix(in srgb, var(--accent-3) 45%, transparent);
-      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent-3) 18%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent-1) 50%, transparent);
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent-1) 20%, transparent);
     }
 
-    .bookmark-modal-overlay {
+    .floating-notice-dock {
       position: fixed;
-      inset: 0;
-      z-index: 5500;
-      background: rgba(3, 2, 7, 0.65);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      display: flex;
+      top: 1.15rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4500;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      gap: 0.75rem;
+      background: rgba(18, 8, 16, 0.84);
+      border: 1px solid rgba(244, 63, 94, 0.45);
+      padding: 0.58rem 0.9rem 0.58rem 0.75rem;
+      border-radius: 999px;
+      color: #f8fafc;
+      font-size: 0.88rem;
+      font-weight: 600;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 24px rgba(244, 63, 94, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease, visibility 0.28s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      max-width: 94vw;
+      width: max-content;
     }
-    .bookmark-modal-overlay.dismissed {
+    .floating-notice-dock:hover {
+      border-color: rgba(251, 113, 133, 0.75);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.82), 0 0 32px rgba(244, 63, 94, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    }
+    .floating-notice-dock.dismissed {
+      transform: translate(-50%, -24px) scale(0.95);
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
-
-    .floating-bookmark-popup {
-      position: relative;
-      z-index: 5501;
-      width: 360px;
-      max-width: 92vw;
-      background: var(--card-bg);
-      border: 1px solid var(--border-glow);
-      border-radius: 24px;
-      padding: 1.45rem 1.35rem 1.3rem;
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.85), 0 0 35px var(--glow);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      display: flex;
-      flex-direction: column;
-      gap: 0.95rem;
-      transform: scale(1) translateY(0);
-      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .bookmark-modal-overlay.dismissed .floating-bookmark-popup {
-      transform: scale(0.92) translateY(20px);
-    }
-
-    .bm-popup-header {
-      display: flex;
+    .notice-urgent-badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.6rem;
-    }
-    .bm-popup-title-group {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-    }
-    .bm-popup-icon {
-      font-size: 1.1rem;
-      line-height: 1;
-    }
-    .bm-popup-title {
-      font-family: 'Space Grotesk', sans-serif;
+      gap: 0.38rem;
+      background: rgba(244, 63, 94, 0.16);
+      border: 1px solid rgba(244, 63, 94, 0.42);
+      color: #fda4af;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
       font-weight: 700;
-      font-size: 0.98rem;
-      color: #ffffff;
+      padding: 3px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
     }
-
-    .bm-popup-close {
-      background: var(--pill-bg);
-      border: 1px solid var(--pill-border);
-      color: var(--muted);
+    .notice-pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fb7185;
+      box-shadow: 0 0 8px #f43f5e;
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+    .floating-notice-dock a {
+      color: #fb7185;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(251, 113, 133, 0.55);
+      padding-bottom: 1px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .floating-notice-dock a:hover {
+      color: #ffffff;
+      border-bottom-style: solid;
+      border-color: #ffffff;
+    }
+    .notice-close-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #cbd5e1;
       width: 24px;
       height: 24px;
       border-radius: 50%;
@@ -767,113 +806,13 @@
       font-size: 0.72rem;
       transition: all 0.2s ease;
       flex-shrink: 0;
-    }
-    .bm-popup-close:hover {
-      background: #e11d48;
-      border-color: #e11d48;
-      color: #ffffff;
-      transform: scale(1.1);
-    }
-
-    .bm-popup-shortcut-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      background: var(--card-inner);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.55rem 0.85rem;
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-    .bm-kbd {
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid var(--border-glow);
-      color: var(--accent-1);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 6px;
-    }
-
-    .bm-confirm-btn {
-      width: 100%;
-      padding: 0.65rem 1rem;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #ffffff;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.84rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
-      transition: all 0.25s ease;
-    }
-    .bm-confirm-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(16, 185, 129, 0.55);
-    }
-
-    .floating-notice-dock {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 1.5rem;
-      z-index: 999;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: var(--dropdown-bg);
-      border: 1px solid var(--pill-border);
-      padding: 0.55rem 1.15rem 0.55rem 0.75rem;
-      border-radius: 999px;
-      color: var(--text);
-      font-size: 0.86rem;
-      font-weight: 600;
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 24px var(--glow);
-      transition: transform 0.32s ease, opacity 0.28s ease, visibility 0.28s ease;
-      max-width: calc(100vw - 4rem);
-    }
-    .floating-notice-dock.dismissed {
-      transform: translateY(24px) scale(0.9);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .floating-notice-dock a {
-      color: var(--accent-1);
-      font-weight: 700;
-      text-decoration: underline;
-    }
-    .notice-close-btn {
-      background: var(--pill-bg);
-      border: 1px solid var(--pill-border);
-      color: var(--muted);
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.74rem;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-      order: -1;
+      margin-left: 0.15rem;
     }
     .notice-close-btn:hover {
-      background: #e11d48;
-      border-color: #e11d48;
+      background: rgba(244, 63, 94, 0.25);
+      border-color: #fb7185;
       color: #ffffff;
-      transform: scale(1.15);
+      transform: scale(1.08);
     }
 
     .toast {
@@ -1124,26 +1063,18 @@
       .section-card-wrapper { padding: 1.25rem 0.85rem; border-radius: 20px; }
       .section-header h2 { font-size: 1.4rem; }
       .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
-      .floating-bookmark-popup {
-        bottom: auto;
-        top: 50%;
-        left: 50%;
-        right: auto;
-        transform: translate(-50%, -50%);
-        width: 90vw;
-        max-width: 340px;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px var(--glow);
-      }
-      .floating-bookmark-popup.dismissed {
-        transform: translate(-50%, -40%) scale(0.92);
-      }
       .floating-notice-dock {
-        bottom: 1.2rem;
-        left: 0.75rem;
-        right: 0.75rem;
-        max-width: calc(100vw - 1.5rem);
-        padding: 0.52rem 0.9rem;
-        font-size: 0.8rem;
+        top: 0.75rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 94vw;
+        max-width: 94vw;
+        padding: 0.65rem 0.95rem;
+        font-size: 0.84rem;
+        gap: 0.55rem;
+        border-radius: 18px;
+        flex-wrap: wrap;
+        text-align: center;
       }
       footer.dmca-container {
         width: 95%;
@@ -1228,56 +1159,10 @@
     <div id="main-container"></div>
   </main>
 
-  <div class="bookmark-modal-overlay dismissed" id="bookmark-modal-overlay" onclick="handleBookmarkOverlayClick(event)">
-    <div class="floating-bookmark-popup" id="floating-bookmark-popup">
-      <div class="bm-popup-header">
-        <div class="bm-popup-title-group">
-          <span class="bm-popup-icon">🔖</span>
-          <span class="bm-popup-title">Bookmark Us!</span>
-        </div>
-        <button type="button" class="bm-popup-close" onclick="playClickSound(); closeBookmarkPopup()" title="Close" aria-label="Close">✕</button>
-      </div>
-
-      <div style="font-size:0.82rem; color:var(--muted); line-height:1.45;">Never lose access to your favorite streaming sites</div>
-
-      <div class="bm-popup-shortcut-row">
-        <span>Quick Shortcut:</span>
-        <span class="bm-kbd" id="bookmark-key-label">Ctrl + D</span>
-      </div>
-
-      <div style="display:flex; flex-direction:column; gap:0.45rem; font-size:0.79rem; color:var(--text); line-height:1.45;">
-        <div style="display:flex; align-items:center; gap:0.45rem;">
-          <span style="color:#38bdf8; font-size:0.65rem;">●</span>
-          <span><b>Chrome/Edge:</b> Click ★ in address bar</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:0.45rem;">
-          <span style="color:#fbbf24; font-size:0.65rem;">●</span>
-          <span><b>Firefox:</b> Click ⭐️ in address bar</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:0.45rem;">
-          <span style="color:#38bdf8; font-size:0.65rem;">●</span>
-          <span><b>Safari:</b> Click + or use Cmd+D</span>
-        </div>
-      </div>
-
-      <div style="background:var(--card-inner); border:1px solid var(--border); border-radius:14px; padding:0.65rem 0.85rem; font-size:0.78rem; color:var(--muted); line-height:1.42;">
-        <div style="font-weight:700; color:#fff; display:flex; align-items:center; gap:0.35rem; margin-bottom:0.18rem;">
-          <span>📱</span> <span>On Mobile?</span>
-        </div>
-        Tap the <b>Share</b> button and select <b>"Add to Home Screen"</b>
-      </div>
-
-      <button type="button" class="bm-confirm-btn" onclick="confirmBookmark()">
-        <span>✓</span>
-        <span>I've Bookmarked It</span>
-      </button>
-    </div>
-  </div>
-
   <div class="floating-notice-dock" id="floating-notice-dock">
+    <span class="notice-urgent-badge"><span class="notice-pulse-dot"></span>IMPORTANT</span>
+    <span>Use <a href="https://brave.com/" target="_blank" rel="noopener noreferrer">Brave Browser</a> or the <a href="https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh" target="_blank" rel="noopener noreferrer">uBlock Origin</a> extension to remove ads.</span>
     <button type="button" class="notice-close-btn" onclick="playClickSound(); dismissNotice()" title="Dismiss Notice" aria-label="Dismiss">✕</button>
-    <span style="font-size:1.1rem;">🛡️</span>
-    <span>Use <a href="https://brave.com/" target="_blank" rel="noopener noreferrer">Brave</a> or <a href="https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh" target="_blank" rel="noopener noreferrer">uBlock Origin</a> to remove ads</span>
   </div>
 
   <div class="toast" id="toast">Saved!</div>
@@ -1347,7 +1232,7 @@
 
       <div class="dmca-action-center">
         <a
-          href="mailto:contact@couchpotato@proton.com"
+          href="mailto:couchpotato@proton.com"
           class="dmca-submit-big-btn"
           onclick="playClickSound()"
         >
@@ -1370,56 +1255,10 @@
     let activeThemeId = "purple";
     let activeCategory = "All";
     let activeCountry = "US";
-    let bookmarkOverlay = null;
-    let bookmarkPopup = null;
     let favorites = [];
 
-    const CACHE_NAME = 'couchport-asset-cache-v1';
-    const memoryImageCache = new Map();
-
-    async function getCachedImageUrl(originalUrl) {
-      if (!originalUrl || originalUrl.startsWith('data:')) return originalUrl;
-      if (memoryImageCache.has(originalUrl)) {
-        return memoryImageCache.get(originalUrl);
-      }
-
-      if ('caches' in window) {
-        try {
-          const cache = await caches.open(CACHE_NAME);
-          const cachedResponse = await cache.match(originalUrl);
-          if (cachedResponse) {
-            const blob = await cachedResponse.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            memoryImageCache.set(originalUrl, blobUrl);
-            return blobUrl;
-          }
-          fetch(originalUrl, { mode: 'cors' })
-            .then(async (response) => {
-              if (response.ok) {
-                const responseClone = response.clone();
-                await cache.put(originalUrl, responseClone);
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-                memoryImageCache.set(originalUrl, blobUrl);
-              }
-            })
-            .catch(() => {});
-        } catch (e) {}
-      }
-      return originalUrl;
-    }
-
     function hydrateCachedImages() {
-      const cachedImgs = document.querySelectorAll('img[data-cache-src]');
-      cachedImgs.forEach(async (img) => {
-        const src = img.getAttribute('data-cache-src');
-        if (src) {
-          const resolvedSrc = await getCachedImageUrl(src);
-          if (img.src !== resolvedSrc) {
-            img.src = resolvedSrc;
-          }
-        }
-      });
+      // Images use native browser HTTP caching via standard <img> tags to prevent CORS fetch errors
     }
 
     try {
@@ -1478,12 +1317,16 @@
         color2: 0xe11d48
       },
       "Movies & Shows": {
+        displayTitle: "Movies & Shows",
+        subTag: "⛩️ Includes Anime",
         banner: "https://nestflix.fun/img/_header/header-bg-1280w.jpg",
         icon: "🎬",
         color1: 0xfb7185,
         color2: 0xfbbf24
       },
       "Anime": {
+        displayTitle: "Anime",
+        subTag: "✨ Anime Exclusive",
         banner: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop",
         icon: "⛩️",
         color1: 0xe879f9,
@@ -1510,11 +1353,11 @@
     };
 
     const sitesData = [
-      { name: "1Shows", url: "https://1shows.org", domain: "1shows.org", category: "Movies & Shows", badge: "trusted", countries: ["US"] },
-      { name: "1Flex", url: "https://1flex.org", domain: "1flex.org", category: "Movies & Shows", badge: "trusted", countries: ["US"] },
-      { name: "1Tube", url: "https://1tube.org", domain: "1tube.org", category: "Movies & Shows", badge: "trusted", countries: ["US"] },
-      { name: "MeowTV", url: "https://meowtv.ru", domain: "meowtv.ru", category: "Movies & Shows", badge: "trusted", countries: ["US"] },
-      { name: "CineLite", url: "https://cinelite.xyz", domain: "cinelite.xyz", category: "Movies & Shows", badge: "trusted", countries: ["US"] },
+      { name: "1Shows", url: "https://1shows.org", domain: "1shows.org", category: "Movies & Shows", badge: "dub", countries: ["US"] },
+      { name: "1Flex", url: "https://1flex.org", domain: "1flex.org", category: "Movies & Shows", badge: "dub", countries: ["US"] },
+      { name: "1Tube", url: "https://1tube.org", domain: "1tube.org", category: "Movies & Shows", badge: "dub", countries: ["US"] },
+      { name: "MeowTV", url: "https://meowtv.ru", domain: "meowtv.ru", category: "Movies & Shows", badge: "", countries: ["US"] },
+      { name: "CineLite", url: "https://cinelite.xyz", domain: "cinelite.xyz", category: "Movies & Shows", badge: "", countries: ["US"] },
       { name: "Rivo", url: "https://rivo.st", domain: "rivo.st", category: "Movies & Shows", badge: "", countries: ["US"] },
       { name: "RiveStream", url: "https://rivestream.ru", domain: "rivestream.ru", category: "Movies & Shows", badge: "", countries: ["US"] },
       { name: "FlickyStream", url: "https://flickystream.mov", domain: "flickystream.mov", category: "Movies & Shows", badge: "", countries: ["US"] },
@@ -1534,11 +1377,11 @@
       { name: "Willow", url: "https://willow.arlen.icu", domain: "willow.arlen.icu", category: "Movies & Shows", badge: "", countries: ["US"] },
       { name: "Atlantic", url: "https://atlantic.st", domain: "atlantic.st", category: "Movies & Shows", badge: "", countries: ["US"] },
       { name: "StreamingUnity", url: "https://streamingunity.fun", domain: "streamingunity.fun", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "ReAnime", url: "https://reanime.to", domain: "reanime.to", category: "Anime", badge: "trusted", countries: ["US"] },
-      { name: "Animepahe", "url": "https://animepahe.pw/", domain: "animepahe.pw", category: "Anime", badge: "trusted", countries: ["US", "IN"] },
-      { name: "AnikotoTV", url: "https://anikototv.to", domain: "anikototv.to", category: "Anime", badge: "trusted", countries: ["US"] },
-      { name: "Enma", url: "https://enma.lol", domain: "enma.lol", category: "Anime", badge: "trusted", countries: ["US"] },
-      { name: "Miruro", url: "https://miruro.to", domain: "miruro.to", category: "Anime", badge: "trusted", countries: ["US"] },
+      { name: "ReAnime", url: "https://reanime.to", domain: "reanime.to", category: "Anime", badge: "dub", countries: ["US"] },
+      { name: "Animepahe", url: "https://animepahe.pw/", domain: "animepahe.pw", category: "Anime", badge: "", countries: ["US", "IN"] },
+      { name: "AnikotoTV", url: "https://anikototv.to", domain: "anikototv.to", category: "Anime", badge: "dub", countries: ["US"] },
+      { name: "Enma", url: "https://enma.lol", domain: "enma.lol", category: "Anime", badge: "", countries: ["US"] },
+      { name: "Miruro", url: "https://miruro.to", domain: "miruro.to", category: "Anime", badge: "dub", countries: ["US"] },
       { name: "Ani.pm", url: "https://ani.pm", domain: "ani.pm", category: "Anime", badge: "", countries: ["US"] },
       { name: "Anime.nexus", url: "https://anime.nexus", domain: "anime.nexus", category: "Anime", badge: "", countries: ["US"] },
       { name: "AniKage", url: "https://anikage.cc", domain: "anikage.cc", category: "Anime", badge: "", countries: ["US"] },
@@ -1554,9 +1397,9 @@
       { name: "AnimeHeaven", url: "https://animeheaven.me", domain: "animeheaven.me", category: "Anime", badge: "", countries: ["US"] },
       { name: "Anitaku", url: "https://anitaku.io", domain: "anitaku.io", category: "Anime", badge: "", countries: ["US"] },
       { name: "LunarX", url: "https://lunarx.to", domain: "lunarx.to", category: "Anime", badge: "", countries: ["US"] },
-      { name: "MangaBall", url: "https://mangaball.com", domain: "mangaball.com", category: "Manga", badge: "trusted", countries: ["US"] },
-      { name: "Atsu", url: "https://atsu.moe", domain: "atsu.moe", category: "Manga", badge: "trusted", countries: ["US"] },
-      { name: "OniSaga", url: "https://onisaga.com", domain: "onisaga.com", category: "Manga", badge: "trusted", countries: ["US"] },
+      { name: "MangaBall", url: "https://mangaball.com", domain: "mangaball.com", category: "Manga", badge: "", countries: ["US"] },
+      { name: "Atsu", url: "https://atsu.moe", domain: "atsu.moe", category: "Manga", badge: "", countries: ["US"] },
+      { name: "OniSaga", url: "https://onisaga.com", domain: "onisaga.com", category: "Manga", badge: "", countries: ["US"] },
       { name: "Kagane", url: "https://kagane.org", domain: "kagane.org", category: "Manga", badge: "", countries: ["US"] },
       { name: "AquaReader", url: "https://aquareader.org", domain: "aquareader.org", category: "Manga", badge: "", countries: ["US"] },
       { name: "ComicK", url: "https://comick.dev", domain: "comick.dev", category: "Manga", badge: "", countries: ["US"] },
@@ -1577,10 +1420,10 @@
       { name: "MangaKatana", url: "https://mangakatana.com", domain: "mangakatana.com", category: "Manga", badge: "", countries: ["US"] },
       { name: "LikeManga", url: "https://likemanga.ink", domain: "likemanga.ink", category: "Manga", badge: "", countries: ["US"] },
       { name: "MangaXO", url: "https://mangaxo.com", domain: "mangaxo.com", category: "Manga", badge: "", countries: ["US"] },
-      { name: "King of Shojo", url: "https://kingofshojo.com", domain: "kingofshojo.com", category: "Manga", badge: "new", countries: ["US", "JP", "KR"] },
-      { name: "DaddyLive", url: "https://dlive.sx", domain: "dlive.sx", category: "Live TV & Sports", badge: "trusted", countries: ["US"] },
-      { name: "OnDemand", url: "https://ondemand.st", domain: "ondemand.st", category: "Live TV & Sports", badge: "trusted", countries: ["US"] },
-      { name: "Streamed", url: "https://streamed.pk", domain: "streamed.pk", category: "Live TV & Sports", badge: "trusted", countries: ["US"] },
+      { name: "King of Shojo", url: "https://kingofshojo.com", domain: "kingofshojo.com", category: "Manga", badge: "", countries: ["US", "JP", "KR"] },
+      { name: "DaddyLive", url: "https://dlive.sx", domain: "dlive.sx", category: "Live TV & Sports", badge: "", countries: ["US"] },
+      { name: "OnDemand", url: "https://ondemand.st", domain: "ondemand.st", category: "Live TV & Sports", badge: "", countries: ["US"] },
+      { name: "Streamed", url: "https://streamed.pk", domain: "streamed.pk", category: "Live TV & Sports", badge: "", countries: ["US"] },
       { name: "Sport+", url: "https://en97.sportplus.watch", domain: "en97.sportplus.watch", category: "Live TV & Sports", badge: "", countries: ["US"] },
       { name: "TheTVApp", url: "https://thetvapp.plus", domain: "thetvapp.plus", category: "Live TV & Sports", badge: "", countries: ["US"] },
       { name: "NTV", url: "https://ntv.cx", domain: "ntv.cx", category: "Live TV & Sports", badge: "", countries: ["US"] },
@@ -1602,7 +1445,7 @@
       { name: "NetMirror", url: "https://netmirror.gg/2/en", domain: "netmirror.gg", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] },
       { name: "PikaShow", url: "https://pikashowtv.in/", domain: "pikashowtv.in", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] },
       { name: "MobiFlix", url: "https://mobiflix.net", domain: "mobiflix.net", category: "Apps", badge: "", countries: ["US"] },
-      { name: "YouCine", url: "https://youcineapkpro.com/", domain: "youcineapkpro.com", category: "Apps", badge: "new", countries: ["US", "IN"] },
+      { name: "YouCine", url: "https://youcineapkpro.com/", domain: "youcineapkpro.com", category: "Apps", badge: "", countries: ["US", "IN"] },
       { name: "PlayFy", url: "https://playfy.live/", domain: "playfy.live", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] }
     ];
 
@@ -1665,63 +1508,6 @@
       } catch (e) {}
     }
 
-    function handleBookmarkOverlayClick(e) {
-      if (!bookmarkOverlay) bookmarkOverlay = document.getElementById("bookmark-modal-overlay");
-      if (e.target === bookmarkOverlay) {
-        closeBookmarkPopup();
-      }
-    }
-
-    function closeBookmarkPopup() {
-      if (!bookmarkOverlay) bookmarkOverlay = document.getElementById("bookmark-modal-overlay");
-      if (bookmarkOverlay) {
-        bookmarkOverlay.classList.add("dismissed");
-      }
-      try {
-        localStorage.setItem("couchport_bookmark_dismissed", "1");
-      } catch (e) {}
-    }
-
-    function confirmBookmark() {
-      playClickSound();
-      try {
-        localStorage.setItem("couchport_bookmark_dismissed", "1");
-        localStorage.setItem("couchport_bookmarked", "1");
-      } catch (e) {}
-      if (!bookmarkOverlay) bookmarkOverlay = document.getElementById("bookmark-modal-overlay");
-      if (bookmarkOverlay) {
-        bookmarkOverlay.classList.add("dismissed");
-      }
-    }
-
-    function setupBookmarkKeyLabel() {
-      const isMac = navigator.platform && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-      const keyLabel = document.getElementById("bookmark-key-label");
-      if (keyLabel && isMac) {
-        keyLabel.textContent = "Cmd + D";
-      }
-    }
-
-    function checkBookmarkPopupStatus() {
-      try {
-        const isDismissed = localStorage.getItem("couchport_bookmark_dismissed") === "1" || 
-                            localStorage.getItem("couchport_bookmarked") === "1";
-        if (!bookmarkOverlay) bookmarkOverlay = document.getElementById("bookmark-modal-overlay");
-        if (bookmarkOverlay) {
-          if (isDismissed) {
-            bookmarkOverlay.classList.add("dismissed");
-          } else {
-            setTimeout(() => {
-              if (localStorage.getItem("couchport_bookmark_dismissed") !== "1" &&
-                  localStorage.getItem("couchport_bookmarked") !== "1") {
-                bookmarkOverlay.classList.remove("dismissed");
-              }
-            }, 1000);
-          }
-        }
-      } catch (e) {}
-    }
-
     function toggleDropdown(dropdownId, event) {
       if (event) event.stopPropagation();
       const target = document.getElementById(dropdownId);
@@ -1742,8 +1528,7 @@
       const flagEl = document.getElementById("current-country-flag");
       const nameEl = document.getElementById("current-country-name");
       if (flagEl) {
-        flagEl.setAttribute("data-cache-src", currentObj.flag);
-        flagEl.src = memoryImageCache.get(currentObj.flag) || currentObj.flag;
+        flagEl.src = currentObj.flag;
       }
       if (nameEl) nameEl.textContent = currentObj.name;
 
@@ -1751,12 +1536,10 @@
       if (!menuEl) return;
       menuEl.innerHTML = regionsList.map(region => `
         <div class="dropdown-item ${region.code === activeCountry ? 'selected' : ''}" onclick="playClickSound(); selectCountry('${region.code}', event)">
-          <img class="dropdown-flag" data-cache-src="${region.flag}" src="${memoryImageCache.get(region.flag) || region.flag}" alt="${region.name}" loading="lazy" />
+          <img class="dropdown-flag" src="${region.flag}" alt="${region.name}" loading="lazy" />
           <span>${region.name}</span>
         </div>
       `).join("");
-
-      hydrateCachedImages();
     }
 
     function selectCountry(code, event) {
@@ -1912,6 +1695,27 @@
       renderContent();
     }
 
+    function getFallbackIconSvg(name) {
+      const clean = (name || "CP").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+      const initials = clean.slice(0, 2) || "TV";
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c084fc"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#0f0a1e"/><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="url(#g)" stroke-width="3"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-weight="800" font-size="24" letter-spacing="1">${initials}</text></svg>`;
+      return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+    }
+
+    function handleIconError(img, domain, name) {
+      const stage = parseInt(img.getAttribute("data-fb-stage") || "0", 10);
+      if (stage === 0) {
+        img.setAttribute("data-fb-stage", "1");
+        img.src = "https://www.google.com/s2/favicons?domain=" + domain + "&sz=128";
+      } else if (stage === 1) {
+        img.setAttribute("data-fb-stage", "2");
+        img.src = "https://icon.horse/icon/" + domain;
+      } else {
+        img.onerror = null;
+        img.src = getFallbackIconSvg(name);
+      }
+    }
+
     function renderContent() {
       let sectionsToRender = [];
       const regionSites = sitesData.filter(s => s.countries.includes(activeCountry));
@@ -1919,7 +1723,8 @@
       if (activeCategory === "All") {
         const subCategories = ["Movies & Shows", "Anime", "Manga", "Live TV & Sports", "Apps"];
         sectionsToRender = subCategories.map(subCat => ({
-          name: subCat,
+          name: categoryConfig[subCat].displayTitle || subCat,
+          subTag: categoryConfig[subCat].subTag || "",
           banner: categoryConfig[subCat].banner,
           icon: categoryConfig[subCat].icon,
           sites: regionSites.filter(s => s.category === subCat)
@@ -1927,13 +1732,15 @@
       } else if (activeCategory === "Favorites") {
         sectionsToRender = [{
           name: "Favorites",
+          subTag: "",
           banner: categoryConfig["Favorites"].banner,
           icon: categoryConfig["Favorites"].icon,
           sites: sitesData.filter(s => favorites.includes(s.url))
         }];
       } else {
         sectionsToRender = [{
-          name: activeCategory,
+          name: categoryConfig[activeCategory].displayTitle || activeCategory,
+          subTag: categoryConfig[activeCategory].subTag || "",
           banner: categoryConfig[activeCategory].banner,
           icon: categoryConfig[activeCategory].icon,
           sites: regionSites.filter(s => s.category === activeCategory)
@@ -1947,25 +1754,27 @@
             <div class="section-title-group">
               <span class="section-icon">${sec.icon}</span>
               <h2>${sec.name}</h2>
+              ${sec.subTag ? `<span class="section-subtag">${sec.subTag}</span>` : ''}
             </div>
             <span class="count-pill">${sec.sites.length} available</span>
           </div>
           <div class="grid">
-            ${sec.sites.length > 0 ? sec.sites.map((site) => {
+            ${sec.sites.length > 0 ? sec.sites.map((site, cardIdx) => {
               const isFav = favorites.includes(site.url);
-              const iconUrl = "https://www.google.com/s2/favicons?domain=" + site.domain + "&sz=128";
-              const cachedSrc = memoryImageCache.get(iconUrl) || iconUrl;
+              const iconUrl = "https://icons.duckduckgo.com/ip3/" + site.domain + ".ico";
+              const safeName = site.name.replace(/'/g, "\\'");
+              const animDelay = Math.min(cardIdx * 0.018, 0.28).toFixed(3);
               return `
-                <div class="link-card" data-url="${site.url}" onclick="openSite('${site.url}')" onmousemove="handleCardTilt(event, this)" onmouseleave="resetCardTilt(this)">
+                <div class="link-card" data-url="${site.url}" style="animation-delay: ${animDelay}s;" onclick="openSite('${site.url}')" onmousemove="handleCardTilt(event, this)" onmouseleave="resetCardTilt(this)">
                   <div class="card-top-row">
-                    ${site.badge ? `<span class="badge ${site.badge}">${site.badge}</span>` : '<span></span>'}
+                    ${site.badge === 'dub' ? `<span class="badge dub">DUB</span>` : '<span></span>'}
                     <div class="card-actions">
                       <button type="button" class="action-btn" onclick="copySiteUrl('${site.url}', event)" title="Copy URL">🔗</button>
                       <button type="button" class="action-btn ${isFav ? 'fav-active' : ''}" data-fav-url="${site.url}" onclick="toggleFav('${site.url}', event, this)" title="${isFav ? 'Remove from Favorites' : 'Add to Favorites'}">${isFav ? '♥' : '♡'}</button>
                     </div>
                   </div>
                   <div class="card-content-center">
-                    <img class="favicon" data-cache-src="${iconUrl}" src="${cachedSrc}" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://api.dicebear.com/7.x/identicon/svg?seed=${site.domain}'" />
+                    <img class="favicon" src="${iconUrl}" alt="" loading="lazy" onerror="handleIconError(this, '${site.domain}', '${safeName}')" />
                     <span class="site-name">${site.name}</span>
                   </div>
                 </div>
@@ -1975,7 +1784,11 @@
         </div>
       `).join("");
 
-      hydrateCachedImages();
+      setTimeout(() => {
+        document.querySelectorAll('.section-card-wrapper').forEach((wrapper, idx) => {
+          setTimeout(() => wrapper.classList.add('visible'), idx * 80);
+        });
+      }, 30);
     }
 
     function handleCardTilt(e, card) {
@@ -2686,8 +2499,6 @@
     }
 
     function bootstrapApp() {
-      bookmarkOverlay = document.getElementById("bookmark-modal-overlay");
-      bookmarkPopup = document.getElementById("floating-bookmark-popup");
       try {
         const savedTheme = localStorage.getItem('couchport_theme');
         const validTheme = (savedTheme && paletteMap[savedTheme]) ? savedTheme : 'purple';
@@ -2708,8 +2519,6 @@
       renderCountryDropdown();
       renderCategoriesBar();
       renderContent();
-      setupBookmarkKeyLabel();
-      checkBookmarkPopupStatus();
       checkNoticeDockStatus();
       hydrateCachedImages();
       init3DBackground();
