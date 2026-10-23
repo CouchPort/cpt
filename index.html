@@ -552,8 +552,8 @@
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 0.95rem;
+      grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+      gap: 0.72rem;
       padding-top: 0.25rem;
     }
 
@@ -563,8 +563,8 @@
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 1.15rem 0.9rem 1.35rem;
+      border-radius: 15px;
+      padding: 0.65rem 0.6rem 0.85rem;
       color: var(--text);
       display: flex;
       flex-direction: column;
@@ -598,7 +598,7 @@
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
-      border-radius: 18px;
+      border-radius: 15px;
       z-index: 1;
     }
 
@@ -616,10 +616,10 @@
       z-index: 2;
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      min-height: 28px;
-      margin-bottom: 0.55rem;
+      min-height: 22px;
+      margin-bottom: 0.25rem;
       transform: translateZ(14px);
     }
 
@@ -629,14 +629,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.48rem;
       width: 100%;
-      margin-top: 0.45rem;
+      margin-top: 0.15rem;
       transform: translateZ(22px);
       transition: transform 0.3s ease;
     }
 
-    .card-actions { display: flex; gap: 0.4rem; }
+    .card-actions { display: flex; gap: 0.3rem; }
 
     .action-btn {
       background: var(--pill-bg);
@@ -644,14 +644,14 @@
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--pill-border);
       color: var(--muted);
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 0.78rem;
+      font-size: 0.68rem;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .action-btn:hover {
@@ -668,12 +668,12 @@
     }
 
     .favicon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       object-fit: contain;
       background: var(--pill-bg);
-      padding: 6px;
+      padding: 4px;
       border: 1px solid var(--border);
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 0 10px var(--glow);
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
@@ -687,7 +687,7 @@
     .site-name {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 0.98rem;
+      font-size: 0.84rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -695,26 +695,35 @@
       letter-spacing: -0.01em;
     }
 
-    .badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
-      text-transform: uppercase;
+    .more-btn-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      margin-top: 1.35rem;
+    }
+
+    .more-category-btn {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent-1) 24%, var(--card-inner)), color-mix(in srgb, var(--accent-2) 24%, var(--card-inner)));
+      border: 1px solid var(--border-glow);
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.86rem;
       font-weight: 700;
-      padding: 2px 7.5px;
+      padding: 0.62rem 1.65rem;
       border-radius: 999px;
-      letter-spacing: 0.06em;
-      line-height: 1.25;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      gap: 0.5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 18px var(--glow);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .badge.dub {
-      background: color-mix(in srgb, var(--accent-1) 14%, rgba(0, 0, 0, 0.6)) !important;
-      color: var(--accent-1);
-      border: 1px solid color-mix(in srgb, var(--accent-1) 50%, transparent);
-      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent-1) 20%, transparent);
+
+    .more-category-btn:hover {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 28px var(--glow);
     }
 
     .floating-notice-dock {
@@ -1057,12 +1066,13 @@
       #toggle-3d-btn { display: none !important; }
       #current-country-name { display: none; }
       main { width: 96%; padding: 0 0.4rem; }
-      .sticky-header { margin-top: 0.8rem; margin-bottom: 0.8rem; }
-      .categories-bar { gap: 0.45rem; padding: 0.2rem; }
-      .cat-tab { padding: 0.44rem 0.88rem; font-size: 0.78rem; }
+      .sticky-header { margin-top: 0.5rem; margin-bottom: 0.6rem; padding: 0.6rem 0; }
+      .categories-bar { gap: 0.32rem; padding: 0.15rem; }
+      .cat-tab { padding: 0.32rem 0.62rem; font-size: 0.68rem; gap: 0.28rem; }
+      .cat-tab span { padding: 1px 5px; font-size: 0.6rem; }
       .section-card-wrapper { padding: 1.25rem 0.85rem; border-radius: 20px; }
       .section-header h2 { font-size: 1.4rem; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 0.6rem; }
       .floating-notice-dock {
         top: 0.75rem;
         left: 50%;
@@ -1088,6 +1098,301 @@
       }
       .dmca-grid {
         grid-template-columns: 1fr;
+      }
+    }
+
+    /* First-Time Country Selection Popup Modal */
+    .country-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 8000;
+      background: rgba(4, 2, 10, 0.82);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .country-modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .country-modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 26px;
+      padding: 2rem 1.8rem;
+      max-width: 680px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.85), 0 0 42px var(--glow);
+      text-align: center;
+      transform: translateY(18px) scale(0.96);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .country-modal-backdrop.open .country-modal-card {
+      transform: translateY(0) scale(1);
+    }
+    .country-modal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.35rem, 4vw, 1.75rem);
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      color: #ffffff;
+    }
+    .country-modal-title-text {
+      background: linear-gradient(135deg, #ffffff 35%, var(--accent-1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .country-globe-svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--accent-1);
+      filter: drop-shadow(0 0 10px var(--glow));
+      flex-shrink: 0;
+    }
+    .country-modal-subtitle {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+    }
+    .country-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      gap: 0.65rem;
+    }
+    .country-choice-btn {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.7rem 0.75rem;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+    .country-choice-btn:hover,
+    .country-choice-btn.active {
+      background: var(--card-hover);
+      border-color: var(--accent-1);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 18px var(--glow);
+      transform: translateY(-2px);
+    }
+
+    /* Maximized In-Site Portal Viewer */
+    .site-portal-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: var(--bg-base);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(0.98);
+      transition: opacity 0.28s ease, visibility 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .site-portal-modal.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+    .portal-topbar {
+      height: 50px;
+      background: var(--dropdown-bg);
+      border-bottom: 1px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      gap: 0.75rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+    .portal-site-info {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 0;
+    }
+    .portal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .portal-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .portal-hint { display: inline; }
+    }
+    .portal-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .portal-btn {
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      color: var(--text);
+      padding: 0.36rem 0.85rem;
+      border-radius: 999px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .portal-btn:hover {
+      border-color: var(--accent-1);
+      background: var(--dropdown-hover);
+      color: #ffffff;
+      box-shadow: 0 0 14px var(--glow);
+    }
+    .portal-btn.close-portal {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: rgba(244, 63, 94, 0.5);
+      color: #fda4af;
+    }
+    .portal-btn.close-portal:hover {
+      background: #e11d48;
+      border-color: #fb7185;
+      color: #ffffff;
+    }
+    .portal-iframe-wrap {
+      flex: 1;
+      width: 100%;
+      height: calc(100vh - 50px);
+      position: relative;
+      background: #000000;
+    }
+    #portal-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Bottom-Right Bookmark Prompt Popup */
+    .bookmark-popup {
+      position: fixed;
+      bottom: 1.35rem;
+      right: 1.35rem;
+      z-index: 4600;
+      background: var(--dropdown-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 18px;
+      padding: 0.85rem 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.78), 0 0 24px var(--glow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s ease;
+      max-width: 320px;
+    }
+    .bookmark-popup.dismissed {
+      transform: translateY(24px) scale(0.95);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .bookmark-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--accent-1) 20%, transparent);
+      border: 1px solid var(--pill-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      color: var(--accent-1);
+      flex-shrink: 0;
+      box-shadow: 0 0 14px var(--glow);
+    }
+    .bookmark-text-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      text-align: left;
+    }
+    .bookmark-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.84rem;
+      color: #ffffff;
+    }
+    .bookmark-sub {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+    .bookmark-kbd {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--pill-border);
+      padding: 1px 6px;
+      border-radius: 5px;
+      color: #ffffff;
+    }
+    .bookmark-close {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #cbd5e1;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.68rem;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .bookmark-close:hover {
+      background: rgba(244, 63, 94, 0.25);
+      border-color: #fb7185;
+      color: #ffffff;
+    }
+    @media (max-width: 640px) {
+      .bookmark-popup {
+        bottom: 0.85rem;
+        right: 0.85rem;
+        left: 0.85rem;
+        max-width: none;
+        justify-content: space-between;
       }
     }
   </style>
@@ -1161,8 +1466,55 @@
 
   <div class="floating-notice-dock" id="floating-notice-dock">
     <span class="notice-urgent-badge"><span class="notice-pulse-dot"></span>IMPORTANT</span>
-    <span>Use <a href="https://brave.com/" target="_blank" rel="noopener noreferrer">Brave Browser</a> or the <a href="https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh" target="_blank" rel="noopener noreferrer">uBlock Origin</a> extension to remove ads.</span>
+    <span>Use <a href="https://brave.com/" target="_blank" rel="noopener noreferrer">Brave Browser</a> or the <a href="https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh" target="_blank" rel="noopener noreferrer">uBlock Origin</a> extension for an ad-free experience.</span>
     <button type="button" class="notice-close-btn" onclick="playClickSound(); dismissNotice()" title="Dismiss Notice" aria-label="Dismiss">✕</button>
+  </div>
+
+  <!-- First-Time Country Selection Modal -->
+  <div class="country-modal-backdrop" id="country-welcome-modal">
+    <div class="country-modal-card">
+      <div class="country-modal-title">
+        <svg class="country-globe-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span class="country-modal-title-text">Select Your Region</span>
+      </div>
+      <p class="country-modal-subtitle">Choose your country to personalize your streaming directory.</p>
+      <div class="country-modal-grid" id="country-welcome-grid"></div>
+    </div>
+  </div>
+
+  <!-- Bottom-Right Bookmark Popup -->
+  <div class="bookmark-popup" id="bookmark-popup">
+    <div class="bookmark-icon-box">★</div>
+    <div class="bookmark-text-col">
+      <span class="bookmark-title">Bookmark CouchPort</span>
+      <span class="bookmark-sub" id="bookmark-sub-text">
+        💻 <kbd class="bookmark-kbd" id="bookmark-shortcut">Ctrl + D</kbd> &nbsp;|&nbsp; 📱 <kbd class="bookmark-kbd">⋮ / Share</kbd> → <kbd class="bookmark-kbd">Add to Home</kbd>
+      </span>
+    </div>
+    <button type="button" class="bookmark-close" onclick="playClickSound(); dismissBookmarkPopup()" title="Dismiss">✕</button>
+  </div>
+
+  <!-- Maximized In-App Site Viewer Modal -->
+  <div class="site-portal-modal" id="site-portal-modal">
+    <div class="portal-topbar">
+      <div class="portal-site-info">
+        <span style="color:var(--accent-1);">●</span>
+        <span class="portal-title" id="portal-site-title">Loading...</span>
+        <span class="portal-hint">(If a site blocks embedded viewing, click "Pop Out ↗")</span>
+      </div>
+      <div class="portal-controls">
+        <button type="button" class="portal-btn" onclick="reloadPortalFrame()" title="Reload Stream">↻ Reload</button>
+        <a id="portal-external-link" href="#" target="_blank" rel="noopener noreferrer" class="portal-btn" onclick="playClickSound()">Pop Out ↗</a>
+        <button type="button" class="portal-btn close-portal" onclick="closeSitePortal()">✕ Close</button>
+      </div>
+    </div>
+    <div class="portal-iframe-wrap">
+      <iframe id="portal-iframe" src="about:blank" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" referrerpolicy="no-referrer-when-downgrade" allow="autoplay *; encrypted-media *; fullscreen *; picture-in-picture *; clipboard-write *; accelerometer *; gyroscope *; web-share *; speaker-selection *"></iframe>
+    </div>
   </div>
 
   <div class="toast" id="toast">Saved!</div>
@@ -1310,12 +1662,6 @@
         color1: 0xc084fc,
         color2: 0xa855f7
       },
-      "Favorites": {
-        banner: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1200&auto=format&fit=crop",
-        icon: "❤️",
-        color1: 0xfb7185,
-        color2: 0xe11d48
-      },
       "Movies & Shows": {
         displayTitle: "Movies & Shows",
         subTag: "⛩️ Includes Anime",
@@ -1353,100 +1699,156 @@
     };
 
     const sitesData = [
-      { name: "1Shows", url: "https://1shows.org", domain: "1shows.org", category: "Movies & Shows", badge: "dub", countries: ["US"] },
-      { name: "1Flex", url: "https://1flex.org", domain: "1flex.org", category: "Movies & Shows", badge: "dub", countries: ["US"] },
-      { name: "1Tube", url: "https://1tube.org", domain: "1tube.org", category: "Movies & Shows", badge: "dub", countries: ["US"] },
-      { name: "MeowTV", url: "https://meowtv.ru", domain: "meowtv.ru", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "CineLite", url: "https://cinelite.xyz", domain: "cinelite.xyz", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "Rivo", url: "https://rivo.st", domain: "rivo.st", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "RiveStream", url: "https://rivestream.ru", domain: "rivestream.ru", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "FlickyStream", url: "https://flickystream.mov", domain: "flickystream.mov", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "Cinema.army", url: "https://cinema.army", domain: "cinema.army", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "PrimeFlix", url: "https://primeflix.ru", domain: "primeflix.ru", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "Nepu", url: "https://nepu.cc", domain: "nepu.cc", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "FlixGaze", url: "https://flixgaze.com", domain: "flixgaze.com", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "NetPlayz", url: "https://netplayz.top", domain: "netplayz.top", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "HollyMovieHD", url: "https://hollymoviehd.cc", domain: "hollymoviehd.cc", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "CineJoy", url: "https://cinejoy.pk", domain: "cinejoy.pk", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "Movy", url: "https://movy.sx", domain: "movy.sx", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "CinemaCity", url: "https://cinemacity.cc", domain: "cinemacity.cc", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "OnlyFlix", url: "https://onlyflix.to", domain: "onlyflix.to", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "Bingr", url: "https://bingr.one", domain: "bingr.one", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "PopcornMovies", url: "https://popcornmovies.ac", domain: "popcornmovies.ac", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "LookMovie2", url: "https://lookmovie2.to", domain: "lookmovie2.to", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "Willow", url: "https://willow.arlen.icu", domain: "willow.arlen.icu", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "Atlantic", url: "https://atlantic.st", domain: "atlantic.st", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "StreamingUnity", url: "https://streamingunity.fun", domain: "streamingunity.fun", category: "Movies & Shows", badge: "", countries: ["US"] },
-      { name: "ReAnime", url: "https://reanime.to", domain: "reanime.to", category: "Anime", badge: "dub", countries: ["US"] },
-      { name: "Animepahe", url: "https://animepahe.pw/", domain: "animepahe.pw", category: "Anime", badge: "", countries: ["US", "IN"] },
-      { name: "AnikotoTV", url: "https://anikototv.to", domain: "anikototv.to", category: "Anime", badge: "dub", countries: ["US"] },
-      { name: "Enma", url: "https://enma.lol", domain: "enma.lol", category: "Anime", badge: "", countries: ["US"] },
-      { name: "Miruro", url: "https://miruro.to", domain: "miruro.to", category: "Anime", badge: "dub", countries: ["US"] },
-      { name: "Ani.pm", url: "https://ani.pm", domain: "ani.pm", category: "Anime", badge: "", countries: ["US"] },
-      { name: "Anime.nexus", url: "https://anime.nexus", domain: "anime.nexus", category: "Anime", badge: "", countries: ["US"] },
-      { name: "AniKage", url: "https://anikage.cc", domain: "anikage.cc", category: "Anime", badge: "", countries: ["US"] },
-      { name: "AniDap", url: "https://anidap.lol", domain: "anidap.lol", category: "Anime", badge: "", countries: ["US"] },
-      { name: "JJBA", url: "https://jjba.lol", domain: "jjba.lol", category: "Anime", badge: "", countries: ["US"] },
-      { name: "AniFlix", url: "https://aniflix.uno", domain: "aniflix.uno", category: "Anime", badge: "", countries: ["US"] },
-      { name: "AnimeX", url: "https://animex.one", domain: "animex.one", category: "Anime", badge: "", countries: ["US"] },
-      { name: "AniStream", url: "https://anistream.one", domain: "anistream.one", category: "Anime", badge: "", countries: ["US"] },
-      { name: "KAA", url: "https://kaa.lt", domain: "kaa.lt", category: "Anime", badge: "", countries: ["US"] },
-      { name: "AniClover", url: "https://aniclover.cc", domain: "aniclover.cc", category: "Anime", badge: "", countries: ["US"] },
-      { name: "JustAnime", url: "https://justanime.to", domain: "justanime.to", category: "Anime", badge: "", countries: ["US"] },
-      { name: "AniWaves", url: "https://aniwaves.ru", domain: "aniwaves.ru", category: "Anime", badge: "", countries: ["US"] },
-      { name: "AnimeHeaven", url: "https://animeheaven.me", domain: "animeheaven.me", category: "Anime", badge: "", countries: ["US"] },
-      { name: "Anitaku", url: "https://anitaku.io", domain: "anitaku.io", category: "Anime", badge: "", countries: ["US"] },
-      { name: "LunarX", url: "https://lunarx.to", domain: "lunarx.to", category: "Anime", badge: "", countries: ["US"] },
-      { name: "MangaBall", url: "https://mangaball.com", domain: "mangaball.com", category: "Manga", badge: "", countries: ["US"] },
-      { name: "Atsu", url: "https://atsu.moe", domain: "atsu.moe", category: "Manga", badge: "", countries: ["US"] },
-      { name: "OniSaga", url: "https://onisaga.com", domain: "onisaga.com", category: "Manga", badge: "", countries: ["US"] },
-      { name: "Kagane", url: "https://kagane.org", domain: "kagane.org", category: "Manga", badge: "", countries: ["US"] },
-      { name: "AquaReader", url: "https://aquareader.org", domain: "aquareader.org", category: "Manga", badge: "", countries: ["US"] },
-      { name: "ComicK", url: "https://comick.dev", domain: "comick.dev", category: "Manga", badge: "", countries: ["US"] },
-      { name: "Comix", url: "https://comix.to", domain: "comix.to", category: "Manga", badge: "", countries: ["US"] },
-      { name: "MangaDot", url: "https://mangadot.net", domain: "mangadot.net", category: "Manga", badge: "", countries: ["US"] },
-      { name: "MangaBuddy", url: "https://mangabuddy1.co.uk", domain: "mangabuddy1.co.uk", category: "Manga", badge: "", countries: ["US"] },
-      { name: "QToon", url: "https://qtoon.org", domain: "qtoon.org", category: "Manga", badge: "", countries: ["US"] },
-      { name: "SpecterScans", url: "https://specterscans.com", domain: "specterscans.com", category: "Manga", badge: "", countries: ["US"] },
-      { name: "Mangago", url: "https://mangago.me", domain: "mangago.me", category: "Manga", badge: "", countries: ["US"] },
-      { name: "MangaFire", url: "https://mangafire.to/home", domain: "mangafire.to", category: "Manga", badge: "", countries: ["US", "JP", "KR"] },
-      { name: "AllManga", url: "https://allmanga.to", domain: "allmanga.to", category: "Manga", badge: "", countries: ["US"] },
-      { name: "Mangakakalot", url: "https://mangakakalot.gg", domain: "mangakakalot.gg", category: "Manga", badge: "", countries: ["US"] },
-      { name: "AsuraScans", url: "https://asurascans.com", domain: "asurascans.com", category: "Manga", badge: "", countries: ["US"] },
-      { name: "BatCave", url: "https://batcave.biz", domain: "batcave.biz", category: "Manga", badge: "", countries: ["US"] },
-      { name: "ReadComicsOnline", url: "https://readcomicsonline.ru", domain: "readcomicsonline.ru", category: "Manga", badge: "", countries: ["US"] },
-      { name: "MangaHub", url: "https://mangahub.io", domain: "mangahub.io", category: "Manga", badge: "", countries: ["US"] },
-      { name: "WeebCentral", url: "https://weebcentral.com", domain: "weebcentral.com", category: "Manga", badge: "", countries: ["US"] },
-      { name: "MangaKatana", url: "https://mangakatana.com", domain: "mangakatana.com", category: "Manga", badge: "", countries: ["US"] },
-      { name: "LikeManga", url: "https://likemanga.ink", domain: "likemanga.ink", category: "Manga", badge: "", countries: ["US"] },
-      { name: "MangaXO", url: "https://mangaxo.com", domain: "mangaxo.com", category: "Manga", badge: "", countries: ["US"] },
-      { name: "King of Shojo", url: "https://kingofshojo.com", domain: "kingofshojo.com", category: "Manga", badge: "", countries: ["US", "JP", "KR"] },
-      { name: "DaddyLive", url: "https://dlive.sx", domain: "dlive.sx", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "OnDemand", url: "https://ondemand.st", domain: "ondemand.st", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "Streamed", url: "https://streamed.pk", domain: "streamed.pk", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "Sport+", url: "https://en97.sportplus.watch", domain: "en97.sportplus.watch", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "TheTVApp", url: "https://thetvapp.plus", domain: "thetvapp.plus", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "NTV", url: "https://ntv.cx", domain: "ntv.cx", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "PublicIPTV", url: "https://publiciptv.com", domain: "publiciptv.com", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "StreamKing", url: "https://streamking.cx", domain: "streamking.cx", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "StreamEast", url: "https://streameast.cool", domain: "streameast.cool", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "SportSurge", url: "https://v2.sportsurge.net", domain: "v2.sportsurge.net", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "Famelack", url: "https://famelack.com", domain: "famelack.com", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "SportsBite", url: "https://sportsbite.org", domain: "sportsbite.org", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "Stmify", url: "https://stmify.com", domain: "stmify.com", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "PPV.st", url: "https://ppv.st", domain: "ppv.st", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "GoalZen", url: "https://goalzen.site", domain: "goalzen.site", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "FifStream", url: "https://fifstream1.gt.tc", domain: "fifstream1.gt.tc", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "FreeTVGarden", url: "https://freetvgarden.com", domain: "freetvgarden.com", category: "Live TV & Sports", badge: "", countries: ["US"] },
-      { name: "Playtorrio", url: "https://playtorrio.pages.dev/", domain: "playtorrio.pages.dev", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] },
-      { name: "BeeTV", url: "https://beetvs.com.co/", domain: "beetvs.com.co", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] },
-      { name: "HDO Box", url: "https://hdobox.net/", domain: "hdobox.net", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] },
-      { name: "MovieBox", url: "https://www.moviesbox.com.co/home/", domain: "moviesbox.com.co", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] },
-      { name: "NetMirror", url: "https://netmirror.gg/2/en", domain: "netmirror.gg", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] },
-      { name: "PikaShow", url: "https://pikashowtv.in/", domain: "pikashowtv.in", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] },
-      { name: "MobiFlix", url: "https://mobiflix.net", domain: "mobiflix.net", category: "Apps", badge: "", countries: ["US"] },
-      { name: "YouCine", url: "https://youcineapkpro.com/", domain: "youcineapkpro.com", category: "Apps", badge: "", countries: ["US", "IN"] },
-      { name: "PlayFy", url: "https://playfy.live/", domain: "playfy.live", category: "Apps", badge: "", countries: ["US", "BR", "EG", "FI", "FR", "DE", "IN", "IT", "JP", "NL", "PL", "PT", "RU", "KR", "ES"] }
+      { name: "Movy", url: "https://www.movy.sx/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Cinejoy", url: "https://cinejoy.pk/", category: "Movies & Shows", countries: ["US"] },
+      { name: "P-Stream Forks", url: "https://fmhy.net/video/#p-stream-forks", category: "Movies & Shows", countries: ["US"] },
+      { name: "7Movies", url: "https://7movies.ac/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Atlantic", url: "https://atlantic.st/android", category: "Movies & Shows", countries: ["US"] },
+      { name: "ShuttleTV", url: "https://shuttletv.su/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FlyStream", url: "https://flystream.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "RiveStream", url: "https://www.rivestream.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Flixer", url: "https://flixer.gd/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Vivarium", url: "https://vivarium.su/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MeowTV", url: "https://meowtv.ru/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineLite", url: "https://cinelite.xyz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Chillflix", url: "https://chillflix.lol/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Streamo", url: "https://streamo.st/", category: "Movies & Shows", countries: ["US"] },
+      { name: "dulo", url: "https://dulo.mov/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Movie Night", url: "https://movienig.ht/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Way2Movies", url: "https://beta.way2movies.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Reelix", url: "https://reelix.ac/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Spacedom", url: "https://spacedom.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "LFMX", url: "https://lfmx.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "NippleFlix", url: "https://nippleflix.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "BingeBang", url: "https://bingebang.st/", category: "Movies & Shows", countries: ["US"] },
+      { name: "LightFlix", url: "https://lightflix.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MoonFlix", url: "https://moonflix.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Stellar", url: "https://stellar.gdn/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Cinema Army", url: "https://cinema.army/", category: "Movies & Shows", countries: ["US"] },
+      { name: "SVStream", url: "https://svstream.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineMove", url: "https://cinemove.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Freekz", url: "https://freekz.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Movish", url: "https://movish.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CinemaOS", url: "https://cinemaos.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ThugTV", url: "https://thugtv.online/", category: "Movies & Shows", countries: ["US"] },
+      { name: "GaiaFlix", url: "https://gaiaflix.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "VidPlay", url: "https://vidplay.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineGram", url: "https://cinegram.tv/", category: "Movies & Shows", countries: ["US"] },
+      { name: "WillowMovies", url: "https://willowmovies.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "HiveX", url: "https://hivex.stream/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Overlook", url: "https://overlook.cx/", category: "Movies & Shows", countries: ["US"] },
+      { name: "StigStream", url: "https://stigstream.ru/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineApse", url: "https://www.cineapse.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Bingr", url: "https://bingr.one/", category: "Movies & Shows", countries: ["US"] },
+      { name: "M-Zone", url: "https://m-zone.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Stellar Rip", url: "https://stellar.rip/", category: "Movies & Shows", countries: ["US"] },
+      { name: "AllYouCanWatch", url: "https://allyoucanwatch.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "3EyedRaven", url: "https://3eyedraven.watch/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Cinecat", url: "https://cinecat.eu/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Aether", url: "https://aether.ist/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Basement", url: "https://basementx.lol/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Kdesa", url: "https://kdesa.stream/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineFork", url: "https://cinefork.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "StreamWatch", url: "https://streamwatch.online/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FMFAU", url: "https://fmfau.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PeeStream", url: "https://peestream.in/", category: "Movies & Shows", countries: ["US"] },
+      { name: "1Shows", url: "http://1shows.bz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "AniCine", url: "https://anicine.sbs/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ZetMoon", url: "https://zetmoon.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "67Movies", url: "https://67movies.st/", category: "Movies & Shows", countries: ["US"] },
+      { name: "TonkaCine", url: "https://tonkacine.watch/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PrimeShows", url: "https://www.primeshows.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Moovie", url: "https://moovie.fun/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Anixx", url: "https://anixx.fun/", category: "Movies & Shows", countries: ["US"] },
+      { name: "AuroraScreen", url: "https://aurorascreen.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ArrowTV", url: "https://arrowtv.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Cinetaro", url: "https://cinetaro.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PopcornMovies", url: "https://popcornmovies.ac/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FlixTrz", url: "https://flixtrz.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineRuv", url: "https://cineruv.website/", category: "Movies & Shows", countries: ["US"] },
+      { name: "HydraHD", url: "https://hydrahd.ws/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FireFlix", url: "https://fireflix4.pages.dev/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MovieBite", url: "https://moviebite.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "VaultPlayer", url: "https://vaultplayer.co.uk/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Mapple", url: "https://mapple.fun/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MovieNerds", url: "https://movienerds.site/", category: "Movies & Shows", countries: ["US"] },
+      { name: "SmashyStream", url: "https://smashystream.xyz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "NovaHD", url: "https://novahd.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "YouPlex", url: "https://youplex.site/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Zoryva", url: "https://zoryva.me/", category: "Movies & Shows", countries: ["US"] },
+      { name: "VidBox", url: "https://vidbox.vc/asian-drama", category: "Movies & Shows", countries: ["US"] },
+      { name: "ZenCine", url: "https://zencine.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PopWatch", url: "https://popwatch.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "NetPlayz", url: "https://netplayz.icu/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ScreenScape", url: "https://screenscape.me/", category: "Movies & Shows", countries: ["US"] },
+      { name: "StreamVaults", url: "https://streamvaults.ru/", category: "Movies & Shows", countries: ["US"] },
+      { name: "GreyBoxTV", url: "https://greyboxtv.vercel.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Kofi", url: "https://kofi.mov/", category: "Movies & Shows", countries: ["US"] },
+      { name: "NEPU", url: "https://nepu.io/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PressPlay", url: "https://pressplayx.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineWave", url: "https://watch.cinewave.qzz.io/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineStream", url: "https://cinestream.kje.us/", category: "Movies & Shows", countries: ["US"] },
+      { name: "YouFlex", url: "https://youflex.top/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Flixzy", url: "https://flixzy.pages.dev/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FilmCave", url: "https://filmcave.ru/", category: "Movies & Shows", countries: ["US"] },
+      { name: "321Movies", url: "https://321movies.xyz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Cine.su", url: "https://cine.su/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FrameXTV", url: "https://framextv.xyz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FlyFlix", url: "https://flyflix.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FluxTV", url: "https://fluxtv.co.uk/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineVibe", url: "https://cinevibe.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ReelZone", url: "https://reelzone.icu/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Heartive", url: "https://heartivelovestv.pages.dev/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FlixVo", url: "https://flixvo.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CandleStream", url: "https://candlestream.xyz/#home", category: "Movies & Shows", countries: ["US"] },
+      { name: "Nxsha", url: "https://web.nxsha.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "StreamingUnity", url: "https://streamingunity.vip/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Abibli", url: "https://abibli.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Flicker Mini", url: "https://flicker-mini.pages.dev/", category: "Movies & Shows", countries: ["US"] },
+      { name: "OnoFlix", url: "https://onoflix.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "BingeFlix", url: "https://bingeflix.tv/", category: "Movies & Shows", countries: ["US"] },
+      { name: "7Reels", url: "https://7reels.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ErnaX", url: "https://ernax.pro/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Flnk", url: "https://flnk.fun/", category: "Movies & Shows", countries: ["US"] },
+      { name: "SoapGo", url: "https://soapgo.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CinemaCity", url: "https://cinemacity.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Arc018", url: "https://arc018.stream/", category: "Movies & Shows", countries: ["US"] },
+      { name: "WatchSeries", url: "https://watchseries.bar/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PawFlix", url: "https://pawflix.foo.ng/", category: "Movies & Shows", countries: ["US"] },
+      { name: "KaitoTV", url: "https://kaitotv.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CinebyTV", url: "https://cinebytv.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "RidoMovies", url: "https://ridomovies.is/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Filmo", url: "https://filmo.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "TVids", url: "https://www.tvids.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MoviesToWatch", url: "https://www.moviestowatch.top/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MilkBox", url: "https://milkbox.zapto.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "StreamEx", url: "https://streamex.hn/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ZeroStream", url: "https://zerostream.alwaysdata.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FishyStream", url: "https://fishystream-app.pages.dev/", category: "Movies & Shows", countries: ["US"] },
+      { name: "SnowStream", url: "https://snowstream.vercel.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "StreamGoblin", url: "https://streamgoblin.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "WatchOrbit", url: "https://watchorbit.me/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineNest", url: "https://cine-nest-nine.vercel.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "DuaFile", url: "https://download.duafile.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Fliker", url: "https://fliker.freebuff.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Meowly", url: "https://meowly.qzz.io/", category: "Movies & Shows", countries: ["US"] },
+      { name: "RabbitMeow", url: "https://rabbitmeow.online/", category: "Movies & Shows", countries: ["US"] },
+      { name: "AZMovies", url: "https://azmovies.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "OnionPlay", url: "https://onionplay.st/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ShowBox", url: "https://www.showbox.media/", category: "Movies & Shows", countries: ["US"] },
+      { name: "UniqueStream", url: "https://uniquestream.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "EV01", url: "https://ev01.ws/", category: "Movies & Shows", countries: ["US"] },
+      { name: "WarFlix", url: "https://warflix.im/", category: "Movies & Shows", countries: ["US"] },
+      { name: "BBFlix", url: "https://bbflix.one/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FShareTV", url: "https://fsharetv.co/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MovieNest", url: "https://movienestbd.best/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MoviePire", url: "https://moviepire.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "M4UHD", url: "https://m4uhd.vip/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Levidia", url: "https://www.levidia.ch/", category: "Movies & Shows", countries: ["US"] },
+      { name: "SubSL", url: "https://subsl.top/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PrimeWire", url: "https://www.primewire.mov/", category: "Movies & Shows", countries: ["US"] },
+      { name: "HollyMovieHD", url: "https://hollymoviehd.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "AnyMovies", url: "https://www.downloads-anymovies.co/", category: "Movies & Shows", countries: ["US"] }
     ];
 
     const mainContainer = document.getElementById("main-container");
@@ -1505,6 +1907,44 @@
           const dock = document.getElementById("floating-notice-dock");
           if (dock) dock.classList.add("dismissed");
         }
+      } catch (e) {}
+    }
+
+    function dismissBookmarkPopup() {
+      const popup = document.getElementById("bookmark-popup");
+      if (popup) popup.classList.add("dismissed");
+      try { localStorage.setItem("couchport_bookmark_dismissed", "1"); } catch (e) {}
+    }
+
+    function checkBookmarkPopupStatus() {
+      try {
+        const isMac = navigator.platform && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const shortcutKey = isMac ? '⌘ + D' : 'Ctrl + D';
+
+        const subTextEl = document.getElementById("bookmark-sub-text");
+        if (subTextEl) {
+          subTextEl.innerHTML = `💻 Press <kbd class="bookmark-kbd">${shortcutKey}</kbd> &nbsp;|&nbsp; 📱 Tap <kbd class="bookmark-kbd">⋮ / Share</kbd> → <kbd class="bookmark-kbd">Add to Home</kbd>`;
+        }
+
+        if (localStorage.getItem("couchport_bookmark_dismissed") === "1") {
+          const popup = document.getElementById("bookmark-popup");
+          if (popup) popup.classList.add("dismissed");
+        }
+      } catch (e) {}
+    }
+
+    function syncUrlHashState(portalObj) {
+      try {
+        const params = new URLSearchParams();
+        if (activeCategory && activeCategory !== "All") {
+          params.set("cat", activeCategory);
+        }
+        if (portalObj && portalObj.url) {
+          params.set("portal", portalObj.url);
+          if (portalObj.name) params.set("name", portalObj.name);
+        }
+        const hashStr = params.toString();
+        history.replaceState(null, "", hashStr ? "#" + hashStr : window.location.pathname + window.location.search);
       } catch (e) {}
     }
 
@@ -1579,32 +2019,13 @@
       setTimeout(() => t.classList.remove("show"), 2000);
     }
 
-    function copySiteUrl(url, event) {
-      if (event) event.stopPropagation();
-      playClickSound();
-      const targetUrl = url.startsWith("http") ? url : "https://" + url;
-      const tempInput = document.createElement("textarea");
-      tempInput.value = targetUrl;
-      tempInput.style.position = "fixed";
-      tempInput.style.opacity = "0";
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      try {
-        document.execCommand("copy");
-        showToast("URL Copied to Clipboard! 🔗");
-      } catch (e) {
-        showToast("Failed to copy URL");
-      }
-      document.body.removeChild(tempInput);
-    }
-
     function toggleFav(siteKey, event, btnEl) {
       if (event) event.stopPropagation();
       playClickSound();
       const isNowFav = !favorites.includes(siteKey);
       if (isNowFav) {
-        favorites.push(siteKey);
-        showToast("Saved to Favorites ❤️");
+        favorites.unshift(siteKey);
+        showToast("Pinned to Top ❤️");
       } else {
         favorites = favorites.filter(d => d !== siteKey);
         showToast("Removed from Favorites");
@@ -1613,36 +2034,7 @@
         localStorage.setItem("stream_favs", JSON.stringify(favorites));
       } catch (e) {}
 
-      const favTabSpan = document.querySelector('.cat-tab[data-cat="Favorites"] span');
-      if (favTabSpan) {
-        favTabSpan.textContent = favorites.length;
-      }
-
-      if (activeCategory === "Favorites") {
-        const cardToRemove = btnEl ? btnEl.closest('.link-card') : document.querySelector(`.link-card[data-url="${siteKey}"]`);
-        if (cardToRemove) {
-          cardToRemove.remove();
-          const grid = document.querySelector('.grid');
-          if (grid && grid.querySelectorAll('.link-card').length === 0) {
-            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted);">Click the ♡ icon on any card to bookmark your favorite streaming sites here!</div>';
-          }
-          const countPill = document.querySelector('.count-pill');
-          if (countPill) countPill.textContent = `${favorites.length} available`;
-        }
-      } else {
-        const allFavButtons = document.querySelectorAll(`button[data-fav-url="${siteKey}"]`);
-        allFavButtons.forEach(btn => {
-          if (isNowFav) {
-            btn.classList.add('fav-active');
-            btn.textContent = '♥';
-            btn.title = 'Remove from Favorites';
-          } else {
-            btn.classList.remove('fav-active');
-            btn.textContent = '♡';
-            btn.title = 'Add to Favorites';
-          }
-        });
-      }
+      renderContent();
     }
 
     const paletteMap = {
@@ -1664,17 +2056,25 @@
 
     function renderCategoriesBar() {
       const regionSites = sitesData.filter(s => s.countries.includes(activeCountry));
-      const favCount = sitesData.filter(s => favorites.includes(s.url)).length;
+
+      const tabLabels = {
+        "All": "All",
+        "Movies & Shows": "Movies & Shows",
+        "Anime": "Anime",
+        "Manga": "Manga & Comics",
+        "Live TV & Sports": "Live TV & Sports",
+        "Apps": "Mobile Apps"
+      };
 
       categoriesBar.innerHTML = categoriesList.map(cat => {
         let count = 0;
         if (cat === "All") count = regionSites.length;
-        else if (cat === "Favorites") count = favCount;
         else count = regionSites.filter(s => s.category === cat).length;
 
+        const label = tabLabels[cat] || cat;
         return `
           <button class="cat-tab ${cat === activeCategory ? 'active' : ''}" data-cat="${cat}" onclick="playClickSound(); switchCategory('${cat}')">
-            ${cat === 'Favorites' ? '❤️ ' : ''}${cat} <span>${count}</span>
+            ${label} <span>${count}</span>
           </button>
         `;
       }).join("");
@@ -1688,6 +2088,8 @@
       if (activeCategory === cat) return;
       window.scrollTo({ top: 0, behavior: 'smooth' });
       activeCategory = cat;
+      try { localStorage.setItem('couchport_active_cat', cat); } catch (e) {}
+      syncUrlHashState(null);
       const themeColors = paletteMap[activeThemeId] || paletteMap['purple'];
       update3DPalette(themeColors[0], themeColors[1], themeColors[2]);
       update3DCategoryTargets();
@@ -1695,25 +2097,93 @@
       renderContent();
     }
 
-    function getFallbackIconSvg(name) {
+    function getFallbackIconSvg(name, category) {
       const clean = (name || "CP").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
       const initials = clean.slice(0, 2) || "TV";
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c084fc"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#0f0a1e"/><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="url(#g)" stroke-width="3"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-weight="800" font-size="24" letter-spacing="1">${initials}</text></svg>`;
-      return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+      const catColorMap = {
+        "Movies & Shows": "%23fb7185",
+        "Anime": "%23e879f9",
+        "Manga": "%2334d399",
+        "Live TV & Sports": "%2338bdf8",
+        "Apps": "%23fbbf24"
+      };
+      const strokeHex = catColorMap[category] || "%23c084fc";
+      return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="92" height="92" x="4" y="4" rx="22" fill="%23110b22" stroke="${strokeHex}" stroke-width="5"/><text x="50" y="54" font-family="sans-serif" font-size="38" font-weight="800" fill="${strokeHex}" text-anchor="middle" dominant-baseline="middle">${initials}</text></svg>`;
     }
 
-    function handleIconError(img, domain, name) {
-      const stage = parseInt(img.getAttribute("data-fb-stage") || "0", 10);
-      if (stage === 0) {
-        img.setAttribute("data-fb-stage", "1");
-        img.src = "https://www.google.com/s2/favicons?domain=" + domain + "&sz=128";
-      } else if (stage === 1) {
-        img.setAttribute("data-fb-stage", "2");
-        img.src = "https://icon.horse/icon/" + domain;
+    function extractDomain(url) {
+      if (!url) return "";
+      try {
+        return new URL(url.startsWith("http") ? url : "https://" + url).hostname.replace(/^www\./, "");
+      } catch (e) {
+        return "";
+      }
+    }
+
+    function getSmartIcon(site) {
+      const domain = extractDomain(site ? site.url : "");
+      if (!domain) {
+        return getFallbackIconSvg(site ? site.name : "CP", site ? site.category : "");
+      }
+      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+    }
+
+    function handleIconLoad(img) {
+      if (!img) return;
+      const stage = parseInt(img.getAttribute("data-stage") || "0", 10);
+      const domain = img.getAttribute("data-domain") || "";
+      const name = img.getAttribute("data-name") || "CP";
+      const category = img.getAttribute("data-cat") || "";
+
+      // Google returns a 16x16 default globe when no real favicon exists even with sz=128
+      if (stage === 0 && img.naturalWidth > 0 && img.naturalWidth <= 16) {
+        img.setAttribute("data-stage", "1");
+        if (domain) {
+          img.src = `https://favicon.im/${encodeURIComponent(domain)}?larger=true`;
+        } else {
+          img.src = getFallbackIconSvg(name, category);
+        }
+      } else if (stage === 1 && img.naturalWidth > 0 && img.naturalWidth <= 16) {
+        img.setAttribute("data-stage", "2");
+        img.src = getFallbackIconSvg(name, category);
+      }
+    }
+
+    function handleIconError(img) {
+      if (!img) return;
+      const stage = parseInt(img.getAttribute("data-stage") || "0", 10);
+      const domain = img.getAttribute("data-domain") || "";
+      const name = img.getAttribute("data-name") || "CP";
+      const category = img.getAttribute("data-cat") || "";
+
+      if (stage === 0 && domain) {
+        img.setAttribute("data-stage", "1");
+        img.src = `https://favicon.im/${encodeURIComponent(domain)}?larger=true`;
       } else {
         img.onerror = null;
-        img.src = getFallbackIconSvg(name);
+        img.setAttribute("data-stage", "2");
+        img.src = getFallbackIconSvg(name, category);
       }
+    }
+
+    function getItemsForThreeRows() {
+      const w = window.innerWidth;
+      if (w <= 480) return 8;
+      if (w <= 768) return 12;
+      if (w <= 1024) return 16;
+      if (w <= 1280) return 21;
+      return 27;
+    }
+
+    function sortSitesWithFavsFirst(sitesArray) {
+      return [...sitesArray].sort((a, b) => {
+        const aFav = favorites.indexOf(a.url);
+        const bFav = favorites.indexOf(b.url);
+        if (aFav !== -1 && bFav !== -1) return aFav - bFav;
+        if (aFav !== -1) return -1;
+        if (bFav !== -1) return 1;
+        return 0;
+      });
     }
 
     function renderContent() {
@@ -1723,31 +2193,32 @@
       if (activeCategory === "All") {
         const subCategories = ["Movies & Shows", "Anime", "Manga", "Live TV & Sports", "Apps"];
         sectionsToRender = subCategories.map(subCat => ({
+          rawCat: subCat,
           name: categoryConfig[subCat].displayTitle || subCat,
           subTag: categoryConfig[subCat].subTag || "",
           banner: categoryConfig[subCat].banner,
           icon: categoryConfig[subCat].icon,
-          sites: regionSites.filter(s => s.category === subCat)
+          sites: sortSitesWithFavsFirst(regionSites.filter(s => s.category === subCat))
         })).filter(sec => sec.sites.length > 0);
-      } else if (activeCategory === "Favorites") {
-        sectionsToRender = [{
-          name: "Favorites",
-          subTag: "",
-          banner: categoryConfig["Favorites"].banner,
-          icon: categoryConfig["Favorites"].icon,
-          sites: sitesData.filter(s => favorites.includes(s.url))
-        }];
       } else {
         sectionsToRender = [{
+          rawCat: activeCategory,
           name: categoryConfig[activeCategory].displayTitle || activeCategory,
           subTag: categoryConfig[activeCategory].subTag || "",
           banner: categoryConfig[activeCategory].banner,
           icon: categoryConfig[activeCategory].icon,
-          sites: regionSites.filter(s => s.category === activeCategory)
+          sites: sortSitesWithFavsFirst(regionSites.filter(s => s.category === activeCategory))
         }];
       }
 
-      mainContainer.innerHTML = sectionsToRender.map((sec, secIdx) => `
+      const maxPreviewCount = getItemsForThreeRows();
+
+      mainContainer.innerHTML = sectionsToRender.map((sec, secIdx) => {
+        const isAllTab = activeCategory === "All";
+        const visibleSites = isAllTab ? sec.sites.slice(0, maxPreviewCount) : sec.sites;
+        const hiddenCount = sec.sites.length - visibleSites.length;
+
+        return `
         <div class="section-card-wrapper" id="sec-${secIdx}">
           <div class="banner-overlay" style="background-image: url(&quot;${sec.banner}&quot;);"></div>
           <div class="section-header">
@@ -1759,30 +2230,38 @@
             <span class="count-pill">${sec.sites.length} available</span>
           </div>
           <div class="grid">
-            ${sec.sites.length > 0 ? sec.sites.map((site, cardIdx) => {
+            ${visibleSites.length > 0 ? visibleSites.map((site, cardIdx) => {
               const isFav = favorites.includes(site.url);
-              const iconUrl = "https://icons.duckduckgo.com/ip3/" + site.domain + ".ico";
-              const safeName = site.name.replace(/'/g, "\\'");
-              const animDelay = Math.min(cardIdx * 0.018, 0.28).toFixed(3);
+              const primaryIcon = getSmartIcon(site);
+              const siteDomain = extractDomain(site.url);
+              const safeName = (site.name || "").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+              const animDelay = Math.min(cardIdx * 0.015, 0.25).toFixed(3);
               return `
-                <div class="link-card" data-url="${site.url}" style="animation-delay: ${animDelay}s;" onclick="openSite('${site.url}')" onmousemove="handleCardTilt(event, this)" onmouseleave="resetCardTilt(this)">
+                <div class="link-card" data-url="${site.url}" style="animation-delay: ${animDelay}s; ${isFav ? 'border-color: var(--accent-1); box-shadow: 0 8px 24px var(--glow);' : ''}" onclick="openSite('${site.url}', '${safeName}')" onmousemove="handleCardTilt(event, this)" onmouseleave="resetCardTilt(this)">
                   <div class="card-top-row">
-                    ${site.badge === 'dub' ? `<span class="badge dub">DUB</span>` : '<span></span>'}
                     <div class="card-actions">
-                      <button type="button" class="action-btn" onclick="copySiteUrl('${site.url}', event)" title="Copy URL">🔗</button>
-                      <button type="button" class="action-btn ${isFav ? 'fav-active' : ''}" data-fav-url="${site.url}" onclick="toggleFav('${site.url}', event, this)" title="${isFav ? 'Remove from Favorites' : 'Add to Favorites'}">${isFav ? '♥' : '♡'}</button>
+                      <button type="button" class="action-btn ${isFav ? 'fav-active' : ''}" data-fav-url="${site.url}" onclick="toggleFav('${site.url}', event, this)" title="${isFav ? 'Unpin from Top' : 'Pin to Top'}">${isFav ? '♥' : '♡'}</button>
                     </div>
                   </div>
                   <div class="card-content-center">
-                    <img class="favicon" src="${iconUrl}" alt="" loading="lazy" onerror="handleIconError(this, '${site.domain}', '${safeName}')" />
+                    <img class="favicon" src="${primaryIcon}" alt="${safeName}" data-stage="0" data-domain="${siteDomain}" data-name="${safeName}" data-cat="${site.category || ''}" loading="lazy" onload="handleIconLoad(this)" onerror="handleIconError(this)" />
                     <span class="site-name">${site.name}</span>
                   </div>
                 </div>
               `;
-            }).join("") : `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted);">${activeCategory === 'Favorites' ? 'Click the ♡ icon on any card to bookmark your favorite streaming sites here!' : 'No matching streaming sites found for this region.'}</div>`}
+            }).join("") : `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted);">No matching streaming sites found for this region.</div>`}
           </div>
+          ${isAllTab && hiddenCount > 0 ? `
+            <div class="more-btn-container">
+              <button type="button" class="more-category-btn" onclick="playClickSound(); switchCategory('${sec.rawCat}')">
+                <span>More ${sec.name} (+${hiddenCount})</span>
+                <span>→</span>
+              </button>
+            </div>
+          ` : ''}
         </div>
-      `).join("");
+        `;
+      }).join("");
 
       setTimeout(() => {
         document.querySelectorAll('.section-card-wrapper').forEach((wrapper, idx) => {
@@ -2188,24 +2667,22 @@
 
       if (isMobile) {
         const mobileSpan = halfWidth * 1.68;
-        const mobileSpacing = mobileSpan / 5;
+        const mobileSpacing = mobileSpan / 4;
         const mobileStartX = -mobileSpan / 2;
         allPositions = {
-          "Favorites":        { x: mobileStartX + 0 * mobileSpacing, y: commonLineY, z: commonZ },
-          "Movies & Shows":   { x: mobileStartX + 1 * mobileSpacing, y: commonLineY, z: commonZ },
-          "Anime":            { x: mobileStartX + 2 * mobileSpacing, y: commonLineY, z: commonZ },
-          "Manga":            { x: mobileStartX + 3 * mobileSpacing, y: commonLineY, z: commonZ },
-          "Live TV & Sports": { x: mobileStartX + 4 * mobileSpacing, y: commonLineY, z: commonZ },
-          "Apps":             { x: mobileStartX + 5 * mobileSpacing, y: commonLineY, z: commonZ }
+          "Movies & Shows":   { x: mobileStartX + 0 * mobileSpacing, y: commonLineY, z: commonZ },
+          "Anime":            { x: mobileStartX + 1 * mobileSpacing, y: commonLineY, z: commonZ },
+          "Manga":            { x: mobileStartX + 2 * mobileSpacing, y: commonLineY, z: commonZ },
+          "Live TV & Sports": { x: mobileStartX + 3 * mobileSpacing, y: commonLineY, z: commonZ },
+          "Apps":             { x: mobileStartX + 4 * mobileSpacing, y: commonLineY, z: commonZ }
         };
       } else {
         allPositions = {
-          "Favorites":        { x: getCategoryTabCenterWorldX("Favorites", -10.4),    y: commonLineY, z: commonZ },
-          "Movies & Shows":   { x: getCategoryTabCenterWorldX("Movies & Shows", -5.2), y: commonLineY, z: commonZ },
-          "Anime":            { x: getCategoryTabCenterWorldX("Anime", 0.2),          y: commonLineY, z: commonZ },
-          "Manga":            { x: getCategoryTabCenterWorldX("Manga", 5.0),          y: commonLineY, z: commonZ },
-          "Live TV & Sports": { x: getCategoryTabCenterWorldX("Live TV & Sports", 10.4), y: commonLineY, z: commonZ },
-          "Apps":             { x: getCategoryTabCenterWorldX("Apps", 15.6),          y: commonLineY, z: commonZ }
+          "Movies & Shows":   { x: getCategoryTabCenterWorldX("Movies & Shows", -7.5), y: commonLineY, z: commonZ },
+          "Anime":            { x: getCategoryTabCenterWorldX("Anime", -2.2),          y: commonLineY, z: commonZ },
+          "Manga":            { x: getCategoryTabCenterWorldX("Manga", 3.2),           y: commonLineY, z: commonZ },
+          "Live TV & Sports": { x: getCategoryTabCenterWorldX("Live TV & Sports", 9.0), y: commonLineY, z: commonZ },
+          "Apps":             { x: getCategoryTabCenterWorldX("Apps", 14.5),          y: commonLineY, z: commonZ }
         };
       }
       return { isMobile, allPositions };
@@ -2265,7 +2742,6 @@
       });
 
       const models = [
-        { mesh: createHeartModel(primaryWireMat), category: "Favorites" },
         { mesh: createClapperboardModel(primaryWireMat), category: "Movies & Shows" },
         { mesh: createKatanaModel(primaryWireMat, secondaryWireMat), category: "Anime" },
         { mesh: createMangaBookModel(primaryWireMat), category: "Manga" },
@@ -2492,10 +2968,123 @@
 
     document.addEventListener('visibilitychange', () => { update3DState(); });
 
-    function openSite(url) {
-      playClickSound();
+    let currentPortalUrl = "";
+
+    function openSite(url, siteName, skipSound) {
+      if (!skipSound) playClickSound();
       const targetUrl = url.startsWith("http") ? url : "https://" + url;
-      window.open(targetUrl, "_blank", "noopener,noreferrer");
+      currentPortalUrl = targetUrl;
+
+      const resolvedName = siteName || extractDomain(targetUrl) || "Streaming Portal";
+      const modal = document.getElementById("site-portal-modal");
+      const iframe = document.getElementById("portal-iframe");
+      const titleEl = document.getElementById("portal-site-title");
+      const extLink = document.getElementById("portal-external-link");
+
+      if (titleEl) titleEl.textContent = resolvedName;
+      if (extLink) extLink.href = targetUrl;
+      if (iframe) iframe.src = targetUrl;
+      if (modal) {
+        modal.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      try {
+        localStorage.setItem("couchport_open_portal", JSON.stringify({ url: targetUrl, name: resolvedName }));
+      } catch (e) {}
+      syncUrlHashState({ url: targetUrl, name: resolvedName });
+    }
+
+    function reloadPortalFrame() {
+      playClickSound();
+      const iframe = document.getElementById("portal-iframe");
+      if (!iframe || !currentPortalUrl) return;
+      try {
+        if (iframe.contentWindow && iframe.contentWindow.location && iframe.contentWindow.location.href !== "about:blank") {
+          iframe.contentWindow.location.reload();
+          return;
+        }
+      } catch (e) {
+        // Cross-origin security prevents reading sub-path; reload current frame entry
+      }
+      iframe.src = currentPortalUrl;
+    }
+
+    function closeSitePortal() {
+      playClickSound();
+      currentPortalUrl = "";
+      const modal = document.getElementById("site-portal-modal");
+      const iframe = document.getElementById("portal-iframe");
+      if (modal) modal.classList.remove("open");
+      if (iframe) iframe.src = "about:blank";
+      document.body.style.overflow = "";
+      try {
+        localStorage.removeItem("couchport_open_portal");
+      } catch (e) {}
+      syncUrlHashState(null);
+    }
+
+    function reloadPortalFrame() {
+      playClickSound();
+      const iframe = document.getElementById("portal-iframe");
+      if (!iframe || !currentPortalUrl) return;
+      try {
+        if (iframe.contentWindow && iframe.contentWindow.location && iframe.contentWindow.location.href !== "about:blank") {
+          iframe.contentWindow.location.reload();
+          return;
+        }
+      } catch (e) {
+        // Cross-origin security prevents reading sub-path; reload current frame entry
+      }
+      iframe.src = currentPortalUrl;
+    }
+
+    function closeSitePortal() {
+      playClickSound();
+      const modal = document.getElementById("site-portal-modal");
+      const iframe = document.getElementById("portal-iframe");
+      if (modal) modal.classList.remove("open");
+      if (iframe) iframe.src = "about:blank";
+      document.body.style.overflow = "";
+      try {
+        localStorage.removeItem("couchport_open_portal");
+      } catch (e) {}
+    }
+
+    function initFirstTimeCountryModal() {
+      const modal = document.getElementById("country-welcome-modal");
+      const grid = document.getElementById("country-welcome-grid");
+      if (!modal || !grid) return;
+
+      grid.innerHTML = regionsList.map(r => `
+        <button type="button" class="country-choice-btn ${r.code === activeCountry ? 'active' : ''}" onclick="chooseInitialCountry('${r.code}')">
+          <img class="dropdown-flag" src="${r.flag}" alt="${r.name}" loading="lazy" />
+          <span>${r.name}</span>
+        </button>
+      `).join("");
+
+      let hasSelectedRegion = false;
+      try {
+        hasSelectedRegion = !!localStorage.getItem("couchport_region_selected");
+      } catch (e) {}
+
+      if (!hasSelectedRegion) {
+        setTimeout(() => modal.classList.add("open"), 200);
+      }
+    }
+
+    function chooseInitialCountry(code) {
+      playClickSound();
+      activeCountry = code;
+      try {
+        localStorage.setItem("couchport_region", code);
+        localStorage.setItem("couchport_region_selected", "1");
+      } catch (e) {}
+      const modal = document.getElementById("country-welcome-modal");
+      if (modal) modal.classList.remove("open");
+      renderCountryDropdown();
+      renderCategoriesBar();
+      renderContent();
     }
 
     function bootstrapApp() {
@@ -2510,6 +3099,19 @@
         } else {
           activeCountry = 'US';
         }
+
+        const savedCat = localStorage.getItem('couchport_active_cat');
+        if (savedCat && categoriesList.includes(savedCat)) {
+          activeCategory = savedCat;
+        }
+
+        if (window.location.hash && window.location.hash.length > 1) {
+          const hashParams = new URLSearchParams(window.location.hash.slice(1));
+          const hashCat = hashParams.get("cat");
+          if (hashCat && categoriesList.includes(hashCat)) {
+            activeCategory = hashCat;
+          }
+        }
       } catch (e) {
         setTheme('purple');
         activeCountry = 'US';
@@ -2520,8 +3122,30 @@
       renderCategoriesBar();
       renderContent();
       checkNoticeDockStatus();
+      checkBookmarkPopupStatus();
+      initFirstTimeCountryModal();
       hydrateCachedImages();
       init3DBackground();
+
+      try {
+        let portalToOpen = null;
+        if (window.location.hash && window.location.hash.length > 1) {
+          const hashParams = new URLSearchParams(window.location.hash.slice(1));
+          const hashPortal = hashParams.get("portal");
+          if (hashPortal) {
+            portalToOpen = { url: hashPortal, name: hashParams.get("name") || "" };
+          }
+        }
+        if (!portalToOpen) {
+          const savedPortalRaw = localStorage.getItem("couchport_open_portal");
+          if (savedPortalRaw) {
+            portalToOpen = JSON.parse(savedPortalRaw);
+          }
+        }
+        if (portalToOpen && portalToOpen.url) {
+          openSite(portalToOpen.url, portalToOpen.name, true);
+        }
+      } catch (e) {}
     }
 
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
