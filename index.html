@@ -1,0 +1,3367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CouchPort // Streaming Directory</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='2' y='2' width='36' height='36' rx='10' fill='%230a0601' stroke='%23fbbf24' stroke-width='2.5'/%3E%3Cpath d='M26 13.5C24.2 11.8 21.8 11 19 11C13.5 11 9.5 15 9.5 20C9.5 25 13.5 29 19 29C21.8 29 24.2 28.2 26 26.5' stroke='%23fbbf24' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpolygon points='18.5,16.5 25.5,20 18.5,23.5' fill='%23fde047'/%3E%3Ccircle cx='26' cy='13.5' r='1.8' fill='%23ffffff'/%3E%3Ccircle cx='26' cy='26.5' r='1.8' fill='%23ffffff'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    :root,
+    body[data-theme="purple"] {
+      --bg-base: #060312;
+      --bg-aura-1: rgba(168, 85, 247, 0.30);
+      --bg-aura-2: rgba(217, 70, 239, 0.20);
+      --bg-aura-3: rgba(129, 140, 248, 0.18);
+      --card-bg: rgba(18, 12, 38, 0.60);
+      --card-inner: rgba(14, 10, 30, 0.80);
+      --card-hover: rgba(32, 20, 66, 0.94);
+      --dropdown-bg: rgba(20, 11, 38, 0.96);
+      --dropdown-hover: rgba(168, 85, 247, 0.24);
+      --border: rgba(168, 85, 247, 0.28);
+      --border-glow: rgba(168, 85, 247, 0.65);
+      --accent-1: #c084fc;
+      --accent-2: #a855f7;
+      --accent-3: #e879f9;
+      --glow: rgba(168, 85, 247, 0.38);
+      --pill-bg: rgba(16, 11, 34, 0.75);
+      --pill-border: rgba(192, 132, 252, 0.48);
+      --text: #f8fafc;
+      --muted: #c4b5fd;
+    }
+
+    body[data-theme="gold"] {
+      --bg-base: #0a0601;
+      --bg-aura-1: rgba(245, 158, 11, 0.28);
+      --bg-aura-2: rgba(234, 88, 12, 0.22);
+      --bg-aura-3: rgba(250, 204, 21, 0.16);
+      --card-bg: rgba(28, 18, 6, 0.60);
+      --card-inner: rgba(22, 14, 5, 0.80);
+      --card-hover: rgba(44, 28, 10, 0.94);
+      --dropdown-bg: rgba(26, 16, 5, 0.96);
+      --dropdown-hover: rgba(245, 158, 11, 0.24);
+      --border: rgba(251, 191, 36, 0.28);
+      --border-glow: rgba(251, 191, 36, 0.65);
+      --accent-1: #fbbf24;
+      --accent-2: #ea580c;
+      --accent-3: #fde047;
+      --glow: rgba(245, 158, 11, 0.38);
+      --pill-bg: rgba(24, 15, 6, 0.75);
+      --pill-border: rgba(251, 191, 36, 0.48);
+      --text: #f8fafc;
+      --muted: #fde68a;
+    }
+
+    body[data-theme="green"] {
+      --bg-base: #020b06;
+      --bg-aura-1: rgba(16, 185, 129, 0.28);
+      --bg-aura-2: rgba(52, 211, 153, 0.20);
+      --bg-aura-3: rgba(163, 230, 53, 0.16);
+      --card-bg: rgba(6, 24, 16, 0.60);
+      --card-inner: rgba(5, 19, 13, 0.80);
+      --card-hover: rgba(10, 42, 28, 0.94);
+      --dropdown-bg: rgba(6, 22, 15, 0.96);
+      --dropdown-hover: rgba(16, 185, 129, 0.24);
+      --border: rgba(16, 185, 129, 0.28);
+      --border-glow: rgba(52, 211, 153, 0.65);
+      --accent-1: #34d399;
+      --accent-2: #10b981;
+      --accent-3: #a3e635;
+      --glow: rgba(16, 185, 129, 0.36);
+      --pill-bg: rgba(6, 20, 14, 0.75);
+      --pill-border: rgba(52, 211, 153, 0.48);
+      --text: #f8fafc;
+      --muted: #a7f3d0;
+    }
+
+    body[data-theme="red"] {
+      --bg-base: #0b0204;
+      --bg-aura-1: rgba(244, 63, 94, 0.30);
+      --bg-aura-2: rgba(225, 29, 72, 0.22);
+      --bg-aura-3: rgba(251, 113, 133, 0.16);
+      --card-bg: rgba(30, 8, 14, 0.60);
+      --card-inner: rgba(24, 6, 11, 0.80);
+      --card-hover: rgba(50, 12, 24, 0.94);
+      --dropdown-bg: rgba(28, 7, 13, 0.96);
+      --dropdown-hover: rgba(244, 63, 94, 0.24);
+      --border: rgba(244, 63, 94, 0.28);
+      --border-glow: rgba(244, 63, 94, 0.65);
+      --accent-1: #fb7185;
+      --accent-2: #e11d48;
+      --accent-3: #fda4af;
+      --glow: rgba(244, 63, 94, 0.38);
+      --pill-bg: rgba(26, 7, 12, 0.75);
+      --pill-border: rgba(251, 113, 133, 0.48);
+      --text: #f8fafc;
+      --muted: #fecdd3;
+    }
+
+    body[data-theme="blue"] {
+      --bg-base: #020614;
+      --bg-aura-1: rgba(56, 189, 248, 0.30);
+      --bg-aura-2: rgba(37, 99, 235, 0.24);
+      --bg-aura-3: rgba(6, 182, 212, 0.18);
+      --card-bg: rgba(8, 18, 38, 0.60);
+      --card-inner: rgba(6, 14, 30, 0.80);
+      --card-hover: rgba(12, 32, 64, 0.94);
+      --dropdown-bg: rgba(7, 16, 34, 0.96);
+      --dropdown-hover: rgba(56, 189, 248, 0.24);
+      --border: rgba(56, 189, 248, 0.28);
+      --border-glow: rgba(56, 189, 248, 0.65);
+      --accent-1: #38bdf8;
+      --accent-2: #2563eb;
+      --accent-3: #22d3ee;
+      --glow: rgba(56, 189, 248, 0.36);
+      --pill-bg: rgba(6, 16, 34, 0.75);
+      --pill-border: rgba(56, 189, 248, 0.48);
+      --text: #f8fafc;
+      --muted: #bae6fd;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.5s ease, color 0.3s ease;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 18% 22%, var(--bg-aura-1), transparent 52%),
+        radial-gradient(circle at 82% 76%, var(--bg-aura-2), transparent 52%),
+        radial-gradient(circle at 50% 48%, var(--bg-aura-3), transparent 60%),
+        radial-gradient(rgba(255, 255, 255, 0.038) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+      z-index: -1;
+      pointer-events: none;
+      animation: auraBreathe 14s ease-in-out infinite alternate;
+      transition: background-image 0.6s ease;
+    }
+
+    @keyframes auraBreathe {
+      0% { transform: scale(1) translate(0, 0); opacity: 0.88; }
+      50% { transform: scale(1.04) translate(-1%, 1.5%); opacity: 1; }
+      100% { transform: scale(1.01) translate(1%, -1%); opacity: 0.92; }
+    }
+
+    .top-utility-bar {
+      position: relative;
+      z-index: 1005;
+      max-width: 1460px;
+      width: 94%;
+      margin: 0.4rem auto 0;
+      padding: 0.95rem 0.85rem 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .brand-left-group {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.6rem, 1.8vw, 1rem);
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.65rem, 2.2vw, 0.95rem);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.25s ease;
+    }
+    .brand-cluster:hover {
+      transform: translateY(-1px);
+    }
+
+    .brand-logo {
+      width: clamp(40px, 7vw, 50px);
+      height: clamp(40px, 7vw, 50px);
+      border-radius: clamp(12px, 2.2vw, 15px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-inner);
+      border: 1px solid var(--border-glow);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 0 28px var(--glow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+    .brand-cluster:hover .brand-logo {
+      transform: scale(1.06) rotate(-2deg);
+      border-color: var(--accent-1);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.75), 0 0 38px var(--glow);
+    }
+
+    .logo-svg {
+      width: clamp(24px, 5vw, 32px);
+      height: clamp(24px, 5vw, 32px);
+      filter: drop-shadow(0 0 10px var(--glow));
+    }
+
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.22rem, 4.4vw, 1.56rem);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      min-width: max-content;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-1) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5));
+      line-height: 1.12;
+    }
+
+    .utility-controls {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.45rem, 1.5vw, 0.75rem);
+      flex-wrap: wrap;
+    }
+
+    .custom-dropdown {
+      position: relative;
+      user-select: none;
+    }
+
+    .dropdown-trigger,
+    .toggle-3d-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--dropdown-bg);
+      border: 1px solid var(--pill-border);
+      padding: clamp(0.42rem, 1.2vw, 0.5rem) clamp(0.72rem, 1.8vw, 0.95rem);
+      border-radius: 999px;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(0.78rem, 1.8vw, 0.88rem);
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      transition: all 0.25s ease;
+    }
+
+    .dropdown-trigger:hover,
+    .custom-dropdown.open .dropdown-trigger {
+      border-color: var(--accent-1);
+      box-shadow: 0 8px 25px var(--glow);
+      transform: translateY(-1px);
+    }
+
+    .toggle-3d-trigger.paused {
+      color: var(--muted);
+      border-color: var(--border);
+      opacity: 0.82;
+    }
+
+    .dropdown-flag {
+      width: 22px;
+      height: 15px;
+      object-fit: cover;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      flex-shrink: 0;
+    }
+
+    .theme-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 215px;
+      max-height: 310px;
+      overflow-y: auto;
+      background: var(--dropdown-bg);
+      border: 1px solid var(--pill-border);
+      border-radius: 14px;
+      padding: 0.35rem;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), 0 0 25px var(--glow);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.97);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2000;
+    }
+
+    .custom-dropdown.open .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.58rem 0.8rem;
+      border-radius: 9px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item.selected {
+      background: var(--dropdown-hover);
+      color: #ffffff;
+    }
+
+    .sticky-header {
+      position: sticky;
+      top: 0.5rem;
+      z-index: 999;
+      background: transparent !important;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-bottom: none;
+      padding: 1.2rem 0;
+      margin-top: clamp(2.4rem, 6vh, 3.2rem);
+      margin-bottom: 1.2rem;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      max-width: 1460px;
+      width: 94%;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      justify-content: center;
+      pointer-events: auto;
+    }
+
+    .categories-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      justify-content: center;
+      padding: 0.2rem 0.4rem;
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .cat-tab {
+      background: var(--pill-bg) !important;
+      border: 1px solid var(--pill-border);
+      color: var(--text);
+      padding: 0.5rem 1.12rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.83rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.48rem;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cat-tab span {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+    }
+    .cat-tab:hover {
+      border-color: var(--accent-1);
+      color: #ffffff;
+      background: color-mix(in srgb, var(--accent-1) 22%, transparent) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--glow);
+    }
+    .cat-tab.active {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2)) !important;
+      border-color: var(--border-glow);
+      color: #ffffff;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 0 26px var(--glow);
+      transform: scale(1.04);
+    }
+    .cat-tab.active span {
+      background: rgba(0, 0, 0, 0.35);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+    }
+
+    main {
+      flex: 1 0 auto;
+      max-width: 1460px;
+      width: 94%;
+      margin: 0 auto;
+      padding: 0 1rem;
+      perspective: 1400px;
+    }
+
+    .section-card-wrapper {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 1.85rem 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 28px var(--glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      margin-bottom: 2rem;
+      transform: translateY(22px) scale(0.985);
+      opacity: 0;
+      filter: blur(8px);
+      transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s ease, filter 0.38s ease, border-color 0.3s ease, background 0.4s ease, box-shadow 0.4s ease;
+    }
+    .section-card-wrapper.visible {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      filter: blur(0px);
+    }
+    .section-card-wrapper:hover {
+      border-color: var(--border-glow);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.65), 0 0 40px var(--glow);
+    }
+
+    .banner-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 210px;
+      background-size: cover;
+      background-position: center;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%);
+      pointer-events: none;
+      opacity: 0.52;
+      filter: saturate(1.35) contrast(1.08);
+    }
+
+    .section-header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.95rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .section-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+    .section-icon {
+      font-size: 1.4rem;
+      filter: drop-shadow(0 0 12px var(--glow));
+    }
+    .section-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 35%, var(--accent-1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5));
+    }
+
+    .section-subtag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent-1) 16%, rgba(0, 0, 0, 0.45));
+      border: 1px solid var(--pill-border);
+      color: var(--text);
+      box-shadow: 0 2px 12px var(--glow);
+      letter-spacing: 0.01em;
+    }
+
+    .count-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: var(--pill-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      color: var(--muted);
+      border: 1px solid var(--pill-border);
+      padding: 5px 14px;
+      border-radius: 999px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 15px var(--glow);
+    }
+
+    .grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+      gap: 0.72rem;
+      padding-top: 0.25rem;
+    }
+
+    .link-card {
+      position: relative;
+      background: var(--card-inner);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 0.65rem 0.6rem 0.85rem;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      justify-content: space-between;
+      cursor: pointer;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 12px var(--glow);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      animation: cardCascade 0.36s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+
+    @keyframes cardCascade {
+      0% {
+        opacity: 0;
+        transform: perspective(1000px) translateY(16px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: perspective(1000px) translateY(0) scale(1);
+      }
+    }
+
+    .link-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle 130px at var(--mouse-x, 50%) var(--mouse-y, 50%), color-mix(in srgb, var(--accent-1) 28%, transparent), transparent 80%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      border-radius: 15px;
+      z-index: 1;
+    }
+
+    .link-card:hover::before { opacity: 1; }
+
+    .link-card:hover {
+      border-color: var(--accent-1);
+      background: var(--card-hover);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), 0 0 26px var(--glow);
+      z-index: 5;
+    }
+
+    .card-top-row {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 22px;
+      margin-bottom: 0.25rem;
+      transform: translateZ(14px);
+    }
+
+    .site-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent-1) 20%, rgba(0, 0, 0, 0.55));
+      border: 1px solid var(--pill-border);
+      color: var(--text);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px var(--glow);
+      line-height: 1.2;
+    }
+
+    .card-content-center {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.48rem;
+      width: 100%;
+      margin-top: 0.15rem;
+      transform: translateZ(22px);
+      transition: transform 0.3s ease;
+    }
+
+    .card-actions { display: flex; gap: 0.3rem; }
+
+    .action-btn {
+      background: var(--pill-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--pill-border);
+      color: var(--muted);
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.68rem;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .action-btn:hover {
+      background: var(--dropdown-hover);
+      color: #fff;
+      border-color: var(--accent-1);
+      box-shadow: 0 0 12px var(--glow);
+    }
+    .action-btn.fav-active {
+      color: var(--accent-1);
+      border-color: var(--accent-1);
+      background: color-mix(in srgb, var(--accent-1) 22%, transparent);
+      box-shadow: 0 0 14px var(--glow);
+    }
+
+    .favicon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      object-fit: contain;
+      background: var(--pill-bg);
+      padding: 4px;
+      border: 1px solid var(--border);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 0 10px var(--glow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .link-card:hover .favicon {
+      transform: scale(1.08);
+      border-color: var(--accent-1);
+      box-shadow: 0 10px 24px var(--glow);
+    }
+
+    .site-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.84rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      letter-spacing: -0.01em;
+    }
+
+    .more-btn-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      margin-top: 1.35rem;
+    }
+
+    .more-category-btn {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent-1) 24%, var(--card-inner)), color-mix(in srgb, var(--accent-2) 24%, var(--card-inner)));
+      border: 1px solid var(--border-glow);
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 700;
+      padding: 0.62rem 1.65rem;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 18px var(--glow);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .more-category-btn:hover {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 28px var(--glow);
+    }
+
+    .floating-notice-dock {
+      position: fixed;
+      top: 1.15rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background: rgba(18, 8, 16, 0.84);
+      border: 1px solid rgba(244, 63, 94, 0.45);
+      padding: 0.58rem 0.9rem 0.58rem 0.75rem;
+      border-radius: 999px;
+      color: #f8fafc;
+      font-size: 0.88rem;
+      font-weight: 600;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 24px rgba(244, 63, 94, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease, visibility 0.28s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      max-width: 94vw;
+      width: max-content;
+    }
+    .floating-notice-dock:hover {
+      border-color: rgba(251, 113, 133, 0.75);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.82), 0 0 32px rgba(244, 63, 94, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    }
+    .floating-notice-dock.dismissed {
+      transform: translate(-50%, -24px) scale(0.95);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .notice-urgent-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      background: rgba(244, 63, 94, 0.16);
+      border: 1px solid rgba(244, 63, 94, 0.42);
+      color: #fda4af;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .notice-pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fb7185;
+      box-shadow: 0 0 8px #f43f5e;
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+    .floating-notice-dock a {
+      color: #fb7185;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(251, 113, 133, 0.55);
+      padding-bottom: 1px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .floating-notice-dock a:hover {
+      color: #ffffff;
+      border-bottom-style: solid;
+      border-color: #ffffff;
+    }
+    .notice-close-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #cbd5e1;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.72rem;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      margin-left: 0.15rem;
+    }
+    .notice-close-btn:hover {
+      background: rgba(244, 63, 94, 0.25);
+      border-color: #fb7185;
+      color: #ffffff;
+      transform: scale(1.08);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.75rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--card-hover);
+      border: 1px solid var(--accent-1);
+      color: #fff;
+      padding: 0.65rem 1.4rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px var(--glow);
+      z-index: 6000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    footer.dmca-container {
+      flex-shrink: 0;
+      max-width: 1040px;
+      width: 92%;
+      margin: 4.2rem auto 3rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 26px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.68), 0 0 30px var(--glow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+    footer.dmca-container:hover {
+      border-color: var(--accent-1);
+      box-shadow: 0 28px 75px rgba(0, 0, 0, 0.8), 0 0 45px var(--glow);
+    }
+
+    .dmca-header-accordion {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.4rem 2rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.25s ease;
+    }
+    .dmca-header-accordion:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .dmca-badge-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .dmca-shield-icon {
+      font-size: 1.35rem;
+      filter: drop-shadow(0 0 10px var(--glow));
+    }
+    .dmca-main-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+    .dmca-statute-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      color: var(--accent-1);
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+
+    .dmca-accordion-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .dmca-arrow-icon {
+      width: 18px;
+      height: 18px;
+      stroke: var(--accent-1);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    footer.dmca-container.expanded .dmca-arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    .dmca-expand-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      padding: 0 2rem;
+      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, padding 0.35s ease;
+      border-top: 1px solid transparent;
+    }
+    footer.dmca-container.expanded .dmca-expand-content {
+      max-height: 2000px;
+      opacity: 1;
+      padding: 1.4rem 2rem 2.2rem;
+      border-top-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .dmca-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.45rem;
+      text-align: left;
+    }
+    .dmca-block {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .dmca-block-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .dmca-block-text {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .dmca-notice-steps {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.15rem 1.35rem;
+      text-align: left;
+      margin-bottom: 1.75rem;
+    }
+    .dmca-notice-steps h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .dmca-steps-list {
+      list-style-type: decimal;
+      padding-left: 1.25rem;
+      font-size: 0.79rem;
+      color: var(--muted);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .dmca-action-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      margin: 1.75rem 0 1.25rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .dmca-submit-big-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      padding: 0.82rem 2.4rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 24px var(--glow);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .dmca-submit-big-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.65), 0 0 34px var(--glow);
+      border-color: #ffffff;
+    }
+
+    .dmca-footer-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.76rem;
+      color: var(--muted);
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .top-utility-bar { width: 96%; padding: 0.65rem 0.35rem 0.25rem; gap: 0.5rem; }
+      .brand-cluster { gap: 0.5rem; }
+      .utility-controls { gap: 0.45rem; }
+      .dropdown-trigger, .toggle-3d-trigger {
+        padding: 0.42rem 0.68rem;
+        font-size: 0.78rem;
+      }
+      #toggle-3d-btn { display: none !important; }
+      #current-country-name { display: none; }
+      main { width: 96%; padding: 0 0.4rem; }
+      .sticky-header { margin-top: 0.5rem; margin-bottom: 0.6rem; padding: 0.6rem 0; }
+      .categories-bar { gap: 0.32rem; padding: 0.15rem; }
+      .cat-tab { padding: 0.32rem 0.62rem; font-size: 0.68rem; gap: 0.28rem; }
+      .cat-tab span { padding: 1px 5px; font-size: 0.6rem; }
+      .section-card-wrapper { padding: 1.25rem 0.85rem; border-radius: 20px; }
+      .section-header h2 { font-size: 1.4rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 0.6rem; }
+      .floating-notice-dock {
+        top: 0.75rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 94vw;
+        max-width: 94vw;
+        padding: 0.65rem 0.95rem;
+        font-size: 0.84rem;
+        gap: 0.55rem;
+        border-radius: 18px;
+        flex-wrap: wrap;
+        text-align: center;
+      }
+      footer.dmca-container {
+        width: 95%;
+        margin: 2.2rem auto 2.5rem;
+      }
+      .dmca-header-accordion {
+        padding: 1.15rem 1.1rem;
+      }
+      footer.dmca-container.expanded .dmca-expand-content {
+        padding: 1.15rem 1.1rem 1.8rem;
+      }
+      .dmca-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* First-Time Country Selection Popup Modal */
+    .country-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 8000;
+      background: rgba(4, 2, 10, 0.82);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .country-modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .country-modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 26px;
+      padding: 2rem 1.8rem;
+      max-width: 680px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.85), 0 0 42px var(--glow);
+      text-align: center;
+      transform: translateY(18px) scale(0.96);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .country-modal-backdrop.open .country-modal-card {
+      transform: translateY(0) scale(1);
+    }
+    .country-modal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.35rem, 4vw, 1.75rem);
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      color: #ffffff;
+    }
+    .country-modal-title-text {
+      background: linear-gradient(135deg, #ffffff 35%, var(--accent-1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .country-globe-svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--accent-1);
+      filter: drop-shadow(0 0 10px var(--glow));
+      flex-shrink: 0;
+    }
+    .country-modal-subtitle {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+    }
+    .country-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      gap: 0.65rem;
+    }
+    .country-choice-btn {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.7rem 0.75rem;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+    .country-choice-btn:hover,
+    .country-choice-btn.active {
+      background: var(--card-hover);
+      border-color: var(--accent-1);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 18px var(--glow);
+      transform: translateY(-2px);
+    }
+
+    /* Maximized In-Site Portal Viewer */
+    .site-portal-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: var(--bg-base);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(0.98);
+      transition: opacity 0.28s ease, visibility 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .site-portal-modal.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+    .portal-topbar {
+      height: 50px;
+      background: var(--dropdown-bg);
+      border-bottom: 1px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      gap: 0.75rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+    .portal-site-info {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 0;
+    }
+    .portal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .portal-url-input {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--pill-border);
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      width: clamp(140px, 28vw, 340px);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .portal-url-input:focus {
+      border-color: var(--accent-1);
+      color: #ffffff;
+      box-shadow: 0 0 12px var(--glow);
+    }
+    .portal-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .portal-hint { display: inline; }
+    }
+    .portal-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .portal-btn {
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      color: var(--text);
+      padding: 0.36rem 0.85rem;
+      border-radius: 999px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .portal-btn:hover {
+      border-color: var(--accent-1);
+      background: var(--dropdown-hover);
+      color: #ffffff;
+      box-shadow: 0 0 14px var(--glow);
+    }
+    .portal-btn.close-portal {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: rgba(244, 63, 94, 0.5);
+      color: #fda4af;
+    }
+    .portal-btn.close-portal:hover {
+      background: #e11d48;
+      border-color: #fb7185;
+      color: #ffffff;
+    }
+    .portal-iframe-wrap {
+      flex: 1;
+      width: 100%;
+      height: calc(100vh - 50px);
+      position: relative;
+      background: #000000;
+    }
+    #portal-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Bottom-Right Bookmark Prompt Popup */
+    .bookmark-popup {
+      position: fixed;
+      bottom: 1.35rem;
+      right: 1.35rem;
+      z-index: 4600;
+      background: var(--dropdown-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 22px;
+      padding: 1.15rem 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.88), 0 0 32px var(--glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s ease, border-color 0.25s ease;
+      max-width: 440px;
+      width: 92vw;
+    }
+    .bookmark-popup:hover {
+      border-color: var(--accent-1);
+    }
+    .bookmark-popup.dismissed {
+      transform: translateY(24px) scale(0.95);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .bookmark-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .bookmark-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .bookmark-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent-1) 28%, transparent), color-mix(in srgb, var(--accent-2) 20%, transparent));
+      border: 1px solid var(--pill-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      color: var(--accent-1);
+      flex-shrink: 0;
+      box-shadow: 0 0 14px var(--glow);
+    }
+    .bookmark-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+    .bookmark-subtitle-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      opacity: 0.9;
+    }
+    .bookmark-sub {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+      font-size: 0.78rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .bookmark-guide-card {
+      background: rgba(0, 0, 0, 0.38);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.52rem 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .bookmark-platform-label {
+      font-weight: 700;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.77rem;
+    }
+    .bookmark-steps {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+    .bookmark-kbd {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--pill-border);
+      padding: 2px 7px;
+      border-radius: 6px;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      white-space: nowrap;
+    }
+    .bookmark-close {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #cbd5e1;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.76rem;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .bookmark-close:hover {
+      background: rgba(244, 63, 94, 0.25);
+      border-color: #fb7185;
+      color: #ffffff;
+      transform: scale(1.08);
+    }
+    @media (max-width: 640px) {
+      .bookmark-popup {
+        bottom: 0.75rem;
+        right: 0.75rem;
+        left: 0.75rem;
+        width: auto;
+        max-width: none;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body data-theme="purple">
+
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="top-utility-bar">
+    <div class="brand-left-group">
+      <div class="brand-cluster" onclick="playClickSound(); switchCategory('All'); window.scrollTo({top: 0, behavior: 'smooth'});" title="CouchPort Homepage">
+        <div class="brand-logo" aria-label="CouchPort Logo">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-svg">
+            <defs>
+              <linearGradient id="logo-border-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="var(--accent-1)"/>
+                <stop offset="50%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="var(--accent-2)"/>
+              </linearGradient>
+              <linearGradient id="logo-m-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="50%" stop-color="var(--accent-1)"/>
+                <stop offset="100%" stop-color="var(--accent-2)"/>
+              </linearGradient>
+            </defs>
+            <rect x="2.5" y="2.5" width="35" height="35" rx="11" stroke="url(#logo-border-grad)" stroke-width="1.8" fill="rgba(10, 6, 2, 0.55)"/>
+            <path d="M26 13.5C24.2 11.8 21.8 11 19 11C13.5 11 9.5 15 9.5 20C9.5 25 13.5 29 19 29C21.8 29 24.2 28.2 26 26.5" stroke="url(#logo-m-grad)" stroke-width="3.2" stroke-linecap="round"/>
+            <polygon points="18.5,16.5 25.5,20 18.5,23.5" fill="var(--accent-3)"/>
+            <circle cx="26" cy="13.5" r="1.8" fill="#ffffff"/>
+            <circle cx="26" cy="26.5" r="1.8" fill="#ffffff"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <div class="brand-title">COUCHPORT</div>
+        </div>
+      </div>
+
+      <button type="button" class="dropdown-trigger toggle-3d-trigger" id="toggle-3d-btn" onclick="playClickSound(); toggle3DMotion()" title="Toggle 3D Background Motion">
+        <span id="toggle-3d-icon" style="color:var(--accent-1); font-size:0.92rem;">✦</span>
+        <span id="toggle-3d-text">3D</span>
+      </button>
+    </div>
+
+    <div class="utility-controls">
+      <div class="custom-dropdown" id="theme-dropdown">
+        <button type="button" class="dropdown-trigger" onclick="playClickSound(); toggleDropdown('theme-dropdown', event)" title="Change Color Theme">
+          <span style="font-size:0.95rem; line-height:1;">🎨</span>
+        </button>
+        <div class="dropdown-menu" id="theme-menu"></div>
+      </div>
+
+      <div class="custom-dropdown" id="country-dropdown">
+        <button type="button" class="dropdown-trigger" onclick="playClickSound(); toggleDropdown('country-dropdown', event)">
+          <img class="dropdown-flag" id="current-country-flag" src="https://flagcdn.com/w40/us.png" alt="" />
+          <span id="current-country-name">USA</span>
+        </button>
+        <div class="dropdown-menu" id="country-menu"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-header">
+    <div class="header-inner">
+      <div class="categories-bar" id="categories-bar"></div>
+    </div>
+  </div>
+
+  <main>
+    <div id="main-container"></div>
+  </main>
+
+  <div class="floating-notice-dock" id="floating-notice-dock">
+    <span class="notice-urgent-badge"><span class="notice-pulse-dot"></span>IMPORTANT</span>
+    <span>Use <a href="https://brave.com/" target="_blank" rel="noopener noreferrer">Brave Browser</a> or the <a href="https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh" target="_blank" rel="noopener noreferrer">uBlock Origin</a> extension for an ad-free experience.</span>
+    <button type="button" class="notice-close-btn" onclick="playClickSound(); dismissNotice()" title="Dismiss Notice" aria-label="Dismiss">✕</button>
+  </div>
+
+  <!-- First-Time Country Selection Modal -->
+  <div class="country-modal-backdrop" id="country-welcome-modal">
+    <div class="country-modal-card">
+      <div class="country-modal-title">
+        <svg class="country-globe-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span class="country-modal-title-text">Select Your Region</span>
+      </div>
+      <p class="country-modal-subtitle">Choose your country to personalize your streaming directory.</p>
+      <div class="country-modal-grid" id="country-welcome-grid"></div>
+    </div>
+  </div>
+
+  <!-- Bottom-Right Bookmark Popup -->
+  <div class="bookmark-popup" id="bookmark-popup">
+    <div class="bookmark-header-row">
+      <div class="bookmark-title-group">
+        <div class="bookmark-icon-box">★</div>
+        <div>
+          <div class="bookmark-title">Bookmark CouchPort</div>
+          <div class="bookmark-subtitle-note">Never lose access to your streaming directory</div>
+        </div>
+      </div>
+      <button type="button" class="bookmark-close" onclick="playClickSound(); dismissBookmarkPopup()" title="Dismiss">✕</button>
+    </div>
+    <div class="bookmark-sub" id="bookmark-sub-text">
+      <div class="bookmark-guide-card">
+        <span class="bookmark-platform-label">🖥️ Windows / Linux</span>
+        <span class="bookmark-steps">Press <kbd class="bookmark-kbd">Ctrl + D</kbd></span>
+      </div>
+      <div class="bookmark-guide-card">
+        <span class="bookmark-platform-label">🍎 macOS</span>
+        <span class="bookmark-steps">Press <kbd class="bookmark-kbd">⌘ Cmd + D</kbd></span>
+      </div>
+      <div class="bookmark-guide-card">
+        <span class="bookmark-platform-label">📱 iPhone / iPad (Safari)</span>
+        <span class="bookmark-steps">Tap <kbd class="bookmark-kbd">Share ↑</kbd> → <kbd class="bookmark-kbd">Add to Home Screen</kbd></span>
+      </div>
+      <div class="bookmark-guide-card">
+        <span class="bookmark-platform-label">🤖 Android (Chrome / Brave)</span>
+        <span class="bookmark-steps">Tap <kbd class="bookmark-kbd">⋮ Menu</kbd> → <kbd class="bookmark-kbd">★ Bookmark / Add to Home</kbd></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Maximized In-App Site Viewer Modal -->
+    <!-- Maximized In-App Site Viewer Modal -->
+  <div class="site-portal-modal" id="site-portal-modal">
+    <div class="portal-topbar">
+      <div class="portal-site-info">
+        <span style="color:var(--accent-1);">●</span>
+        <span class="portal-title" id="portal-site-title">Loading...</span>
+      </div>
+      <div class="portal-controls">
+        <button type="button" class="portal-btn" onclick="navigatePortalHistory(-1)" title="Back inside player">←</button>
+        <button type="button" class="portal-btn" onclick="navigatePortalHistory(1)" title="Forward inside player">→</button>
+        <button type="button" class="portal-btn" onclick="reloadPortalFrame()" title="Reload Player">↻ Reload</button>
+        <a id="portal-external-link" href="#" target="_blank" rel="noopener noreferrer" class="portal-btn" onclick="playClickSound()">Pop Out ↗</a>
+        <button type="button" class="portal-btn close-portal" onclick="closeSitePortal()">✕ Close</button>
+      </div>
+    </div>
+    <div class="portal-iframe-wrap">
+      <iframe id="portal-iframe" src="about:blank" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" referrerpolicy="no-referrer-when-downgrade" allow="autoplay *; encrypted-media *; fullscreen *; picture-in-picture *; clipboard-write *; accelerometer *; gyroscope *; web-share *; speaker-selection *"></iframe>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Saved!</div>
+
+  <footer class="dmca-container" id="dmca-card">
+    <div class="dmca-header-accordion" onclick="toggleDMCAAccordion()">
+      <div class="dmca-badge-group">
+        <span class="dmca-shield-icon">⚖️</span>
+        <h3 class="dmca-main-heading">DMCA & Legal Disclaimer</h3>
+        <span class="dmca-statute-pill">17 U.S.C. § 512(c)</span>
+      </div>
+      <div class="dmca-accordion-toggle">
+        <span id="dmca-toggle-label">Show Details</span>
+        <svg class="dmca-arrow-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <div class="dmca-expand-content" id="dmca-content">
+      <div class="dmca-grid">
+        <div class="dmca-block">
+          <div class="dmca-block-title">
+            <span>📁</span>
+            <span>Zero Server Hosting</span>
+          </div>
+          <p class="dmca-block-text">
+            CouchPort operates strictly as an indexing directory and informational search engine. We do not host, store, stream, upload, or encode any video media, torrents, or copyrighted audiovisual materials on our own servers.
+          </p>
+        </div>
+
+        <div class="dmca-block">
+          <div class="dmca-block-title">
+            <span>🔗</span>
+            <span>External Hyperlinks Only</span>
+          </div>
+          <p class="dmca-block-text">
+            All listings, thumbnails, and links point solely to content hosted and controlled by third-party, unaffiliated web destinations across the public internet. We maintain no technical affiliation or control over their external media streams.
+          </p>
+        </div>
+
+        <div class="dmca-block">
+          <div class="dmca-block-title">
+            <span>🛡️</span>
+            <span>Copyright Compliance</span>
+          </div>
+          <p class="dmca-block-text">
+            We respect intellectual property rights and comply with the Digital Millennium Copyright Act (DMCA). Because content is hosted on external websites, the most effective removal method is to contact the direct file host directly.
+          </p>
+        </div>
+      </div>
+
+      <div class="dmca-notice-steps">
+        <h4><span>📝</span> Submitting an Index Removal Request</h4>
+        <p style="font-size:0.79rem; color:var(--muted); margin-bottom:0.5rem;">
+          Copyright owners who wish to remove any directory entry or index link from CouchPort must provide a formal written notice containing:
+        </p>
+        <ol class="dmca-steps-list">
+          <li>Physical or electronic signature of a person authorized to act on behalf of the owner of an exclusive right that is allegedly infringed.</li>
+          <li>Precise identification of the copyrighted work claimed to have been infringed with verifiable ownership evidence.</li>
+          <li>The specific URL link(s) on CouchPort that you request to have unindexed from this directory.</li>
+          <li>Sufficient contact information (authorized email address, legal name, telephone number, and physical mailing address).</li>
+          <li>A statement that you have a good-faith belief that use of the material in the manner complained of is not authorized by the copyright owner, its agent, or the law.</li>
+          <li>A statement made under penalty of perjury that the information in the notification is accurate.</li>
+        </ol>
+      </div>
+
+      <div class="dmca-action-center">
+        <a
+          href="mailto:couchpotato@proton.com"
+          class="dmca-submit-big-btn"
+          onclick="playClickSound()"
+        >
+          <span>✉️</span>
+          <span>Contact Us</span>
+        </a>
+      </div>
+
+      <div class="dmca-footer-meta">
+        <span>© CouchPort Streaming Index. Directory curated for educational and indexing purposes.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let audioCtx = null;
+    let is3DUserEnabled = true;
+    let is3DRunning = true;
+    let animFrameId = null;
+    let activeThemeId = "purple";
+    let activeCategory = "All";
+    let activeCountry = "US";
+    let favorites = [];
+
+    function hydrateCachedImages() {
+      // Images use native browser HTTP caching via standard <img> tags to prevent CORS fetch errors
+    }
+
+    try {
+      favorites = JSON.parse(localStorage.getItem("stream_favs") || "[]");
+    } catch (e) {
+      favorites = [];
+    }
+
+    const themesList = [
+      { id: "purple", name: "Purple", color: "#c084fc" },
+      { id: "gold", name: "Gold", color: "#fbbf24" },
+      { id: "green", name: "Green", color: "#34d399" },
+      { id: "red", name: "Red", color: "#fb7185" },
+      { id: "blue", name: "Blue", color: "#38bdf8" }
+    ];
+
+    const kurdistanFlagSvg = "data:image/svg+xml;utf8," + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+        <rect width="60" height="13.33" y="0" fill="#ED2024"/>
+        <rect width="60" height="13.34" y="13.33" fill="#FFFFFF"/>
+        <rect width="60" height="13.33" y="26.67" fill="#278E43"/>
+        <circle cx="30" cy="20" r="6.5" fill="#FDB913"/>
+      </svg>
+    `.trim());
+
+    const regionsList = [
+      { code: "US", name: "USA", flag: "https://flagcdn.com/w40/us.png" },
+      { code: "IN", name: "India", flag: "https://flagcdn.com/w40/in.png" },
+      { code: "RU", name: "Russia", flag: "https://flagcdn.com/w40/ru.png" },
+      { code: "DE", name: "Germany", flag: "https://flagcdn.com/w40/de.png" },
+      { code: "FR", name: "France", flag: "https://flagcdn.com/w40/fr.png" },
+      { code: "BR", name: "Brazil", flag: "https://flagcdn.com/w40/br.png" },
+      { code: "JP", name: "Japan", flag: "https://flagcdn.com/w40/jp.png" },
+      { code: "KR", name: "South Korea", flag: "https://flagcdn.com/w40/kr.png" },
+      { code: "EG", name: "Egypt", flag: "https://flagcdn.com/w40/eg.png" },
+      { code: "FI", name: "Finland", flag: "https://flagcdn.com/w40/fi.png" },
+      { code: "IT", name: "Italy", flag: "https://flagcdn.com/w40/it.png" },
+      { code: "KRD", name: "Kurdistan", flag: kurdistanFlagSvg },
+      { code: "NL", name: "Netherlands", flag: "https://flagcdn.com/w40/nl.png" },
+      { code: "PL", name: "Poland", flag: "https://flagcdn.com/w40/pl.png" },
+      { code: "PT", name: "Portugal", flag: "https://flagcdn.com/w40/pt.png" },
+      { code: "ES", name: "Spain", flag: "https://flagcdn.com/w40/es.png" }
+    ];
+
+    const categoryConfig = {
+      "All": {
+        banner: "https://plus.unsplash.com/premium_photo-1667482654587-e7091bb42e0c?fm=jpg&q=80&w=1200&auto=format&fit=crop",
+        icon: "⚡",
+        color1: 0xc084fc,
+        color2: 0xa855f7
+      },
+      "Movies & Shows": {
+        displayTitle: "Movies & Shows",
+        subTag: "⛩️ Includes Anime",
+        banner: "https://nestflix.fun/img/_header/header-bg-1280w.jpg",
+        icon: "🎬",
+        color1: 0xfb7185,
+        color2: 0xfbbf24
+      },
+      "Anime": {
+        displayTitle: "Anime",
+        subTag: "✨ Anime Exclusive",
+        banner: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop",
+        icon: "⛩️",
+        color1: 0xe879f9,
+        color2: 0x38bdf8
+      },
+      "Manga": {
+        banner: "https://i.pinimg.com/736x/c1/d5/6c/c1d56cf9e2e5c7904d0ae41ab37df589.jpg",
+        icon: "📖",
+        color1: 0x34d399,
+        color2: 0x10b981
+      },
+      "Live TV & Sports": {
+        banner: "https://i.pinimg.com/736x/e2/ae/c3/e2aec3d3bc494862a537d1b8792ab227.jpg",
+        icon: "📡",
+        color1: 0x38bdf8,
+        color2: 0x2563eb
+      },
+      "Apps": {
+        banner: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1200&auto=format&fit=crop",
+        icon: "🚀",
+        color1: 0xfbbf24,
+        color2: 0xea580c
+      }
+    };
+
+    const sitesData = [
+      { name: "Atlantic", url: "https://atlantic.st/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ShuttleTV", url: "https://shuttletv.su/", category: "Movies & Shows", countries: ["US"] },
+      { name: "RiveStream", url: "https://www.rivestream.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "dulo", url: "https://dulo.mov/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Movie Night", url: "https://movienig.ht/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Reelix", url: "https://reelix.ac/", category: "Movies & Shows", countries: ["US"] },
+      { name: "BingeBang", url: "https://bingebang.st/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MoonFlix", url: "https://moonflix.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Stellar", url: "https://stellar.gdn/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Cinema Army", url: "https://cinema.army/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Freekz", url: "https://freekz.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "VidPlay", url: "https://vidplay.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Overlook", url: "https://overlook.cx/", category: "Movies & Shows", countries: ["US"] },
+      { name: "AllYouCanWatch", url: "https://allyoucanwatch.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Cinecat", url: "https://cinecat.eu/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PeeStream", url: "https://peestream.in/", category: "Movies & Shows", countries: ["US"] },
+      { name: "1Shows", url: "http://1shows.bz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "AniCine", url: "https://anicine.sbs/", category: "Movies & Shows", countries: ["US"] },
+      { name: "67Movies", url: "https://67movies.st/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Moovie", url: "https://moovie.fun/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ArrowTV", url: "https://arrowtv.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FlixTrz", url: "https://flixtrz.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineRuv", url: "https://cineruv.website/", category: "Movies & Shows", countries: ["US"] },
+      { name: "HydraHD", url: "https://hydrahd.ws/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MovieBite", url: "https://moviebite.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "VaultPlayer", url: "https://vaultplayer.co.uk/", category: "Movies & Shows", countries: ["US"] },
+      { name: "SmashyStream", url: "https://smashystream.xyz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ZenCine", url: "https://zencine.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "PopWatch", url: "https://popwatch.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ScreenScape", url: "https://screenscape.me/", category: "Movies & Shows", countries: ["US"] },
+      { name: "GreyBoxTV", url: "https://greyboxtv.vercel.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineWave", url: "https://watch.cinewave.qzz.io/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Cine.su", url: "https://cine.su/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FrameXTV", url: "https://framextv.xyz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FlyFlix", url: "https://flyflix.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineVibe", url: "https://cinevibe.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ReelZone", url: "https://reelzone.icu/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Heartive", url: "https://heartivelovestv.pages.dev/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FlixVo", url: "https://flixvo.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Flicker Mini", url: "https://flicker-mini.pages.dev/", category: "Movies & Shows", countries: ["US"] },
+      { name: "7Reels", url: "https://7reels.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Flnk", url: "https://flnk.fun/", category: "Movies & Shows", countries: ["US"] },
+      { name: "SoapGo", url: "https://soapgo.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "KaitoTV", url: "https://kaitotv.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Filmo", url: "https://filmo.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "TVids", url: "https://www.tvids.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MoviesToWatch", url: "https://www.moviestowatch.top/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MilkBox", url: "https://milkbox.zapto.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "StreamEx", url: "https://streamex.hn/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ZeroStream", url: "https://zerostream.alwaysdata.net/", category: "Movies & Shows", countries: ["US"] },
+      { name: "SnowStream", url: "https://snowstream.vercel.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "StreamGoblin", url: "https://streamgoblin.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineNest", url: "https://cine-nest-nine.vercel.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Fliker", url: "https://fliker.freebuff.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "RabbitMeow", url: "https://rabbitmeow.online/", category: "Movies & Shows", countries: ["US"] },
+      { name: "ShowBox", url: "https://www.showbox.media/", category: "Movies & Shows", countries: ["US"] },
+      { name: "WarFlix", url: "https://warflix.im/", category: "Movies & Shows", countries: ["US"] },
+      { name: "BBFlix", url: "https://bbflix.one/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FShareTV", url: "https://fsharetv.co/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MoviePire", url: "https://moviepire.org/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Levidia", url: "https://www.levidia.ch/", category: "Movies & Shows", countries: ["US"] },
+      { name: "HollyMovieHD", url: "https://hollymoviehd.cc/", category: "Movies & Shows", countries: ["US"] },
+      { name: "AnyMovies", url: "https://www.downloads-anymovies.co/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Meowly", url: "https://meowly.qzz.io/", category: "Movies & Shows", countries: ["US"] },
+      { name: "RidoMovies", url: "https://ridomovies.is/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Ernax", url: "https://ernax.pro/", category: "Movies & Shows", countries: ["US"] },
+      { name: "OnoFlix", url: "https://onoflix.live/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Nxsha", url: "https://web.nxsha.app/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Kofi", url: "https://kofi.mov/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MovieNerds", url: "https://movienerds.site/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FireFlix", url: "https://fireflix4.pages.dev/", category: "Movies & Shows", countries: ["US"] },
+      { name: "FMFAU", url: "https://fmfau.com/", category: "Movies & Shows", countries: ["US"] },
+      { name: "Movish", url: "https://movish.to/", category: "Movies & Shows", countries: ["US"] },
+      { name: "CineLite", url: "https://cinelite.xyz/", category: "Movies & Shows", countries: ["US"] },
+      { name: "MeowTV", url: "https://meowtv.ru/", category: "Movies & Shows", countries: ["US"] },
+      // Anime
+      { name: "Miruro", url: "https://barelystarted.miruro.tv/", category: "Anime", countries: ["US"] },
+      { name: "MKissa", url: "https://mkissa.to/", category: "Anime", countries: ["US"] },
+      { name: "NekoWatch", url: "https://nekowatch.xyz/", category: "Anime", countries: ["US"] },
+      { name: "AniDap", url: "https://anidap.lol/", category: "Anime", countries: ["US"] },
+      { name: "LunarX", url: "https://lunarx.to/", category: "Anime", countries: ["US"] },
+      { name: "Senshi", url: "https://senshi.to/", category: "Anime", countries: ["US"] },
+      { name: "Kazora", url: "https://kazora.cc/", category: "Anime", countries: ["US"] },
+      { name: "AniLight", url: "https://anilight.live/", category: "Anime", countries: ["US"] },
+      { name: "AnimeY", url: "https://animey.to/", category: "Anime", countries: ["US"] },
+      { name: "AniZone", url: "https://anizone.to/", category: "Anime", countries: ["US"] },
+      { name: "AniChan", url: "https://anichan.to/", category: "Anime", countries: ["US"] },
+      { name: "AnimeParadise", url: "https://www.animeparadise.moe/", category: "Anime", countries: ["US"] },
+      { name: "AnimeTVPlus", url: "https://animetvplus.xyz/", category: "Anime", countries: ["US"] },
+      { name: "WatchAnimeZ", url: "https://watchanimez.me/", category: "Anime", countries: ["US"] },
+      { name: "KotoTV", url: "https://kototv.to/", category: "Anime", countries: ["US"] },
+      { name: "ZenBu", url: "https://zen-bu.cc/", category: "Anime", countries: ["US"] },
+      { name: "RiveStream", url: "https://www.rivestream.app/", category: "Anime", countries: ["US"] },
+      { name: "9AnimsTV", url: "https://9animstv.to/", category: "Anime", countries: ["US"] },
+      { name: "MultiNime", url: "https://multinime.site/", category: "Anime", countries: ["US"] },
+      { name: "PirateXPlay", url: "https://piratexplay.cc/home", category: "Anime", countries: ["US"] },
+      { name: "LuciferDonghua", url: "https://luciferdonghua.in/", category: "Anime", countries: ["US"] },
+      { name: "LMAnime", url: "https://lmanime.com/", category: "Anime", countries: ["US"] },
+      { name: "DonghuaStream", url: "https://donghuastream.org/", category: "Anime", countries: ["US"] },
+      { name: "Donghua4K", url: "https://donghua4k.net/", category: "Anime", countries: ["US"] },
+
+      // ============================================================================
+      // 🧪 ANIME TESTING SECTION — REMOVE ANY SITES BELOW THAT DO NOT WORK
+      // ============================================================================
+
+      // 📂 Anime Testing: Same Origin (Restricted to same domain) (20 sites)
+      { name: "AniVault", url: "https://anivault.tv/", category: "Anime", countries: ["US"] },
+      { name: "AnimePahe", url: "https://animepahe.pw/", category: "Anime", countries: ["US"] },
+      { name: "AnimeX", url: "https://animex.one/", category: "Anime", countries: ["US"] },
+      { name: "AniKotoTV", url: "https://anikototv.to/", category: "Anime", countries: ["US"] },
+      { name: "AnimeSuge", url: "https://animesuge.cz/", category: "Anime", countries: ["US"] },
+      { name: "ReAnime", url: "https://reanime.to/", category: "Anime", countries: ["US"] },
+      { name: "AniStream", url: "https://anistream.one/", category: "Anime", countries: ["US"] },
+      { name: "MeguAnime", url: "https://meguanime.com/", category: "Anime", countries: ["US"] },
+      { name: "123AnimeHub", url: "https://123animehub.cc/", category: "Anime", countries: ["US"] },
+      { name: "LuffyTV", url: "https://luffytv.live/", category: "Anime", countries: ["US"] },
+      { name: "YumeZone", url: "https://yumezone.live/torrents", category: "Anime", countries: ["US"] },
+      { name: "AniClover", url: "https://aniclover.cc/", category: "Anime", countries: ["US"] },
+      { name: "AnimeDex", url: "https://animedex.fun/", category: "Anime", countries: ["US"] },
+      { name: "AniKura", url: "https://anikura.club/", category: "Anime", countries: ["US"] },
+      { name: "AnimeLover", url: "https://animelover.site/", category: "Anime", countries: ["US"] },
+      { name: "AniKage", url: "https://anikage.cc/", category: "Anime", countries: ["US"] },
+      { name: "BAnime", url: "https://banime.top/", category: "Anime", countries: ["US"] },
+      { name: "Kuroiru", url: "https://kuroiru.co/", category: "Anime", countries: ["US"] },
+      { name: "AnimeCSE", url: "https://cse.google.com/cse?cx=006516753008110874046:vzcl7wcfhei", category: "Anime", countries: ["US"] },
+      { name: "CrimsonFansubs", url: "https://crimsonfansubs.com/", category: "Anime", countries: ["US"] },
+
+      // 📂 Anime Testing: Denies (Strictly blocked) (2 sites)
+      { name: "Tsukuyomi", url: "https://tsukuyomi.tv/", category: "Anime", countries: ["US"] },
+      { name: "Kyren", url: "https://kyren.moe/", category: "Anime", countries: ["US"] },
+
+      // 📂 Anime Testing: Errors / Unreachable (20 sites)
+      { name: "Ani.pm", url: "https://ani.pm/", category: "Anime", countries: ["US"] },
+      { name: "JustAnime", url: "https://justanime.to/", category: "Anime", countries: ["US"] },
+      { name: "AniXo", url: "https://anixo.online/", category: "Anime", countries: ["US"] },
+      { name: "KAA", url: "https://kaa.lt/", category: "Anime", countries: ["US"] },
+      { name: "AniKuro", url: "https://anikuro.to/", category: "Anime", countries: ["US"] },
+      { name: "AniWaves", url: "https://aniwaves.ru/", category: "Anime", countries: ["US"] },
+      { name: "AniSnatch", url: "https://anisnatch.top/", category: "Anime", countries: ["US"] },
+      { name: "FMHY Anime Apps", url: "https://fmhy.net/video/#anime-streaming-apps", category: "Anime", countries: ["US"] },
+      { name: "AnimeNexus", url: "https://anime.nexus/", category: "Anime", countries: ["US"] },
+      { name: "AnimoTVSlash", url: "https://animotvslash.org/", category: "Anime", countries: ["US"] },
+      { name: "JJBA", url: "https://jjba.lol/", category: "Anime", countries: ["US"] },
+      { name: "Anify", url: "https://anify.to/", category: "Anime", countries: ["US"] },
+      { name: "GoTaku", url: "https://gotaku.to/", category: "Anime", countries: ["US"] },
+      { name: "ANV", url: "https://anv.to/", category: "Anime", countries: ["US"] },
+      { name: "Enma", url: "https://www.enma.lol/", category: "Anime", countries: ["US"] },
+      { name: "AnimeOnsen", url: "https://animeonsen.xyz/", category: "Anime", countries: ["US"] },
+      { name: "SakuSaku", url: "https://sakusaku.to/", category: "Anime", countries: ["US"] },
+      { name: "AniHQ", url: "https://anihq.cc/", category: "Anime", countries: ["US"] },
+      { name: "KawaiiAnime", url: "https://kawaiianime.cc/", category: "Anime", countries: ["US"] },
+      { name: "AnimeKhor", url: "https://animekhor.org/", category: "Anime", countries: ["US"] },
+
+      // ============================================================================
+      // 🏷️ ANIME — CARTOON / TV / DRAMA SITES (WITH BADGES)
+      // ============================================================================
+      { name: "WCO", url: "https://www.wco.tv/", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "PirateXPlay", url: "https://piratexplay.cc/home", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "MegaCartoons", url: "https://www.megacartoons.net/", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "B98 TV", url: "https://www.b98.tv/home/", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "ToonTales", url: "https://www.toontales.net/", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "SuperCartoons", url: "https://www.supercartoons.net/", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "BestSeries", url: "https://bstsrs.in/", category: "Anime", badge: "TV", countries: ["US"] },
+      { name: "Levidia", url: "https://www.levidia.ch/", category: "Anime", badge: "TV", countries: ["US"] },
+      { name: "KissAsian", url: "https://wwv21.kissasian.com.lv/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "KissKH", url: "https://kisskh.ovh/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "K-Drama", url: "https://k-drama.in/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "DramaNice", url: "https://dramanice.boo/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "DramaHood", url: "https://dramahood.mom/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "RiveStream", url: "https://www.rivestream.app/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "KissKH DK", url: "https://kisskh.dk/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "OnDemandChina", url: "https://www.ondemandchina.com/", category: "Anime", badge: "Drama", countries: ["US"] },
+
+      // ============================================================================
+      // 🧪 TEST SECTION — CARTOON / TV / DRAMA (REMOVE IF NOT WORKING)
+      // ============================================================================
+      { name: "FilmArchives JP", url: "https://animation.filmarchives.jp/index.html", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "Eddvault", url: "https://eddvault.notion.site/Eddvault-3b7700da57bd4d429b927c1733ccb772", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "PrimeWire", url: "https://www.primewire.mov/", category: "Anime", badge: "TV", countries: ["US"] },
+      { name: "Noxx", url: "https://noxx.gg/", category: "Anime", badge: "TV", countries: ["US"] },
+      { name: "GoPlay", url: "https://goplay.su/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "AZSeries", url: "https://azseries.org/", category: "Anime", badge: "TV", countries: ["US"] },
+      { name: "AsianCrush", url: "https://www.asiancrush.com/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "FunnierMoments", url: "https://www.funniermoments.net/", category: "Anime", badge: "Cartoon", countries: ["US"] },
+      { name: "Einthusan", url: "https://einthusan.tv/intro/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "KissNeo", url: "https://kissneo.co/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "MyAsianTV", url: "https://myasiantv.com.bz/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "AsiaFlix", url: "https://asiaflix.net/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "VidBox Drama", url: "https://vidbox.vc/asian-drama", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "KissAsian Video", url: "https://kissasian.video/", category: "Anime", badge: "Drama", countries: ["US"] },
+      { name: "DramaFren", url: "https://dramafren.org/", category: "Anime", badge: "Drama", countries: ["US"] },
+
+      // ============================================================================
+      // 📖 MANGA & COMICS — MAIN SITES (WITH BADGES)
+      // ============================================================================
+      { name: "ComicBookPlus", url: "https://comicbookplus.com/", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "Explosm RCG", url: "https://explosm.net/rcg", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "xkcd", url: "https://xkcd.com/", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "OceComic", url: "https://ocecomic.com/", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "WeebCentral", url: "https://weebcentral.com/", category: "Manga", badge: "Manga", countries: ["US"] },
+      { name: "Nyaa Manga", url: "https://nyaa.si/?f=0&c=3_0&q=", category: "Manga", badge: "Manga", countries: ["US"] },
+      { name: "Comix", url: "https://comix.to/", category: "Manga", badge: "Manga", countries: ["US"] },
+
+      // ============================================================================
+      // 🧪 TEST SECTION — MANGA & COMICS (REMOVE IF NOT WORKING)
+      // ============================================================================
+      { name: "BatCave", url: "https://batcave.biz/", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "Comics CSE", url: "https://cse.google.com/cse?cx=006516753008110874046:p4hgytyrohg", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "XoxoComic", url: "https://xoxocomic.com/", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "MangaDot", url: "https://mangadot.net/", category: "Manga", badge: "Manga", countries: ["US"] },
+      { name: "Toonkotsu", url: "https://toonkotsu.com/", category: "Manga", badge: "Manga", countries: ["US"] },
+      { name: "OniSaga", url: "https://onisaga.com/", category: "Manga", badge: "Manga", countries: ["US"] },
+      { name: "Atsu", url: "https://atsu.moe/", category: "Manga", badge: "Manga", countries: ["US"] },
+      { name: "MangaDex", url: "https://mangadex.org/", category: "Manga", badge: "Manga", countries: ["US"] },
+      { name: "GetComics", url: "https://getcomics.org/", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "ReadComicsOnline", url: "https://readcomicsonline.ru/", category: "Manga", badge: "Comics", countries: ["US"] },
+      { name: "Kagane", url: "https://kagane.si/", category: "Manga", badge: "Manga", countries: ["US"] },
+      { name: "MangaFire", url: "https://mangafire.to/", category: "Manga", badge: "Manga", countries: ["US"] },
+
+      // ============================================================================
+      // 📡 LIVE TV & SPORTS — MAIN SITES (WITH BADGES)
+      // ============================================================================
+      { name: "NTV Kobra", url: "https://ntv.st/matches/kobra", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "ZLive", url: "https://zlive.st/", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "TheDaddy", url: "https://thedaddy.pk/24-7-channels.php", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "FameLack", url: "https://famelack.com/", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "EasyWebTV", url: "https://zhangboheng.github.io/Easy-Web-TV-M3u8/routes/tv.html", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "SportsBite", url: "https://sportsbite.org/channels?_sb=1792838412623", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "TitanTV", url: "https://titantv.com/", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "CineVid", url: "https://cinevid.st/channels", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "Kool", url: "https://kool.ws/", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "LiveLive24", url: "https://livelive24.com/", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "NTV Kobra", url: "https://ntv.st/matches/kobra", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "ZLive", url: "https://zlive.st/", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "TheDaddy", url: "https://thedaddy.pk/24-7-channels.php", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "EasyWebTV", url: "https://zhangboheng.github.io/Easy-Web-TV-M3u8/routes/tv.html", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "SportsBite", url: "https://sportsbite.org/channels?_sb=1792838412623", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "TitanTV", url: "https://titantv.com/", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "CineVid", url: "https://cinevid.st/channels", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "Kool", url: "https://kool.ws/", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "LiveLive24", url: "https://livelive24.com/", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+
+      // ============================================================================
+      // 🧪 TEST SECTION — LIVE TV & SPORTS (REMOVE IF NOT WORKING)
+      // ============================================================================
+      { name: "StreamSports99", url: "https://streamsports99.ru/live-tv", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "TVNow ESPN", url: "https://tvnow.st/watch/espn", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "FameLack", url: "https://famelack.com/", category: "Live TV & Sports", badge: "Live Sports", countries: ["US"] },
+      { name: "StreamSports99", url: "https://streamsports99.ru/live-tv", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] },
+      { name: "TVNow ESPN", url: "https://tvnow.st/watch/espn", category: "Live TV & Sports", badge: "Live TV", countries: ["US"] }
+    ];
+
+    const mainContainer = document.getElementById("main-container");
+    const categoriesBar = document.getElementById("categories-bar");
+    const categoriesList = Object.keys(categoryConfig);
+
+    function playClickSound() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(560, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(160, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
+      } catch (e) {}
+    }
+
+    document.addEventListener('click', () => {
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }, { once: true });
+
+    function toggleDMCAAccordion() {
+      playClickSound();
+      const card = document.getElementById("dmca-card");
+      const label = document.getElementById("dmca-toggle-label");
+      if (card) {
+        const isExpanded = card.classList.toggle("expanded");
+        if (label) {
+          label.textContent = isExpanded ? "Hide Details" : "Show Details";
+        }
+      }
+    }
+
+    function dismissNotice() {
+      const dock = document.getElementById("floating-notice-dock");
+      if (dock) dock.classList.add("dismissed");
+      try { localStorage.setItem("couchport_notice_dismissed", "1"); } catch (e) {}
+    }
+
+    function checkNoticeDockStatus() {
+      try {
+        if (localStorage.getItem("couchport_notice_dismissed") === "1") {
+          const dock = document.getElementById("floating-notice-dock");
+          if (dock) dock.classList.add("dismissed");
+        }
+      } catch (e) {}
+    }
+
+    function dismissBookmarkPopup() {
+      const popup = document.getElementById("bookmark-popup");
+      if (popup) popup.classList.add("dismissed");
+      try { localStorage.setItem("couchport_bookmark_dismissed", "1"); } catch (e) {}
+    }
+
+    function checkBookmarkPopupStatus() {
+      try {
+        if (localStorage.getItem("couchport_bookmark_dismissed") === "1") {
+          const popup = document.getElementById("bookmark-popup");
+          if (popup) popup.classList.add("dismissed");
+        }
+      } catch (e) {}
+    }
+
+    function syncUrlHashState(portalObj) {
+      try {
+        const params = new URLSearchParams();
+        if (activeCategory && activeCategory !== "All") {
+          params.set("cat", activeCategory);
+        }
+        if (portalObj && portalObj.url) {
+          params.set("portal", portalObj.url);
+          if (portalObj.name) params.set("name", portalObj.name);
+        }
+        const hashStr = params.toString();
+        history.replaceState(null, "", hashStr ? "#" + hashStr : window.location.pathname + window.location.search);
+      } catch (e) {}
+    }
+
+    function toggleDropdown(dropdownId, event) {
+      if (event) event.stopPropagation();
+      const target = document.getElementById(dropdownId);
+      if (!target) return;
+      const isOpen = target.classList.contains("open");
+      document.querySelectorAll(".custom-dropdown").forEach(d => d.classList.remove("open"));
+      if (!isOpen) {
+        target.classList.add("open");
+      }
+    }
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".custom-dropdown").forEach(d => d.classList.remove("open"));
+    });
+
+    function renderCountryDropdown() {
+      const currentObj = regionsList.find(r => r.code === activeCountry) || regionsList[0];
+      const flagEl = document.getElementById("current-country-flag");
+      const nameEl = document.getElementById("current-country-name");
+      if (flagEl) {
+        flagEl.src = currentObj.flag;
+      }
+      if (nameEl) nameEl.textContent = currentObj.name;
+
+      const menuEl = document.getElementById("country-menu");
+      if (!menuEl) return;
+      menuEl.innerHTML = regionsList.map(region => `
+        <div class="dropdown-item ${region.code === activeCountry ? 'selected' : ''}" onclick="playClickSound(); selectCountry('${region.code}', event)">
+          <img class="dropdown-flag" src="${region.flag}" alt="${region.name}" loading="lazy" />
+          <span>${region.name}</span>
+        </div>
+      `).join("");
+    }
+
+    function selectCountry(code, event) {
+      if (event) event.stopPropagation();
+      activeCountry = code;
+      try {
+        localStorage.setItem("couchport_region", code);
+      } catch (e) {}
+      document.getElementById("country-dropdown").classList.remove("open");
+      renderCountryDropdown();
+      renderCategoriesBar();
+      renderContent();
+    }
+
+    function renderThemeDropdown() {
+      const menuEl = document.getElementById("theme-menu");
+      if (!menuEl) return;
+      menuEl.innerHTML = themesList.map(t => `
+        <div class="dropdown-item ${t.id === activeThemeId ? 'selected' : ''}" onclick="playClickSound(); selectTheme('${t.id}', event)">
+          <span class="theme-dot" style="background: ${t.color}; color: ${t.color};"></span>
+          <span>${t.name}</span>
+        </div>
+      `).join("");
+    }
+
+    function selectTheme(themeName, event) {
+      if (event) event.stopPropagation();
+      setTheme(themeName);
+      document.getElementById("theme-dropdown").classList.remove("open");
+      renderThemeDropdown();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2000);
+    }
+
+    function toggleFav(siteKey, event, btnEl) {
+      if (event) event.stopPropagation();
+      playClickSound();
+      const isNowFav = !favorites.includes(siteKey);
+      if (isNowFav) {
+        favorites.unshift(siteKey);
+        showToast("Pinned to Top ❤️");
+      } else {
+        favorites = favorites.filter(d => d !== siteKey);
+        showToast("Removed from Favorites");
+      }
+      try {
+        localStorage.setItem("stream_favs", JSON.stringify(favorites));
+      } catch (e) {}
+
+      renderContent();
+    }
+
+    const paletteMap = {
+      purple: [0xc084fc, 0xa855f7, 0xe879f9],
+      gold:   [0xfbbf24, 0xea580c, 0xfde047],
+      green:  [0x34d399, 0x10b981, 0xa3e635],
+      red:    [0xfb7185, 0xe11d48, 0xfda4af],
+      blue:   [0x38bdf8, 0x2563eb, 0x22d3ee]
+    };
+
+    function setTheme(themeName) {
+      const validTheme = paletteMap[themeName] ? themeName : 'purple';
+      activeThemeId = validTheme;
+      document.body.setAttribute('data-theme', validTheme);
+      try { localStorage.setItem('couchport_theme', validTheme); } catch (e) {}
+      const colors = paletteMap[validTheme];
+      update3DPalette(colors[0], colors[1], colors[2]);
+    }
+
+    function renderCategoriesBar() {
+      const regionSites = sitesData.filter(s => s.countries.includes(activeCountry));
+
+      const tabLabels = {
+        "All": "All",
+        "Movies & Shows": "Movies & Shows",
+        "Anime": "Anime",
+        "Manga": "Manga & Comics",
+        "Live TV & Sports": "Live TV & Sports",
+        "Apps": "Mobile Apps"
+      };
+
+      categoriesBar.innerHTML = categoriesList.map(cat => {
+        let count = 0;
+        if (cat === "All") count = regionSites.length;
+        else count = regionSites.filter(s => s.category === cat).length;
+
+        const label = tabLabels[cat] || cat;
+        return `
+          <button class="cat-tab ${cat === activeCategory ? 'active' : ''}" data-cat="${cat}" onclick="playClickSound(); switchCategory('${cat}')">
+            ${label} <span>${count}</span>
+          </button>
+        `;
+      }).join("");
+
+      requestAnimationFrame(() => {
+        update3DCategoryTargets();
+      });
+    }
+
+    function switchCategory(cat) {
+      if (activeCategory === cat) return;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      activeCategory = cat;
+      try { localStorage.setItem('couchport_active_cat', cat); } catch (e) {}
+      syncUrlHashState(null);
+      const themeColors = paletteMap[activeThemeId] || paletteMap['purple'];
+      update3DPalette(themeColors[0], themeColors[1], themeColors[2]);
+      update3DCategoryTargets();
+      renderCategoriesBar();
+      renderContent();
+    }
+
+    function getFallbackIconSvg(name, category) {
+      const clean = (name || "CP").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+      const initials = clean.slice(0, 2) || "TV";
+      const catColorMap = {
+        "Movies & Shows": "%23fb7185",
+        "Anime": "%23e879f9",
+        "Manga": "%2334d399",
+        "Live TV & Sports": "%2338bdf8",
+        "Apps": "%23fbbf24"
+      };
+      const strokeHex = catColorMap[category] || "%23c084fc";
+      return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="92" height="92" x="4" y="4" rx="22" fill="%23110b22" stroke="${strokeHex}" stroke-width="5"/><text x="50" y="54" font-family="sans-serif" font-size="38" font-weight="800" fill="${strokeHex}" text-anchor="middle" dominant-baseline="middle">${initials}</text></svg>`;
+    }
+
+    function extractDomain(url) {
+      if (!url) return "";
+      try {
+        return new URL(url.startsWith("http") ? url : "https://" + url).hostname.replace(/^www\./, "");
+      } catch (e) {
+        return "";
+      }
+    }
+
+    function getSmartIcon(site) {
+      const domain = extractDomain(site ? site.url : "");
+      if (!domain) {
+        return getFallbackIconSvg(site ? site.name : "CP", site ? site.category : "");
+      }
+      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+    }
+
+    function handleIconLoad(img) {
+      if (!img) return;
+      const stage = parseInt(img.getAttribute("data-stage") || "0", 10);
+      const domain = img.getAttribute("data-domain") || "";
+      const name = img.getAttribute("data-name") || "CP";
+      const category = img.getAttribute("data-cat") || "";
+
+      // Google returns a 16x16 default globe when no real favicon exists even with sz=128
+      if (stage === 0 && img.naturalWidth > 0 && img.naturalWidth <= 16) {
+        img.setAttribute("data-stage", "1");
+        if (domain) {
+          img.src = `https://favicon.im/${encodeURIComponent(domain)}?larger=true`;
+        } else {
+          img.src = getFallbackIconSvg(name, category);
+        }
+      } else if (stage === 1 && img.naturalWidth > 0 && img.naturalWidth <= 16) {
+        img.setAttribute("data-stage", "2");
+        img.src = getFallbackIconSvg(name, category);
+      }
+    }
+
+    function handleIconError(img) {
+      if (!img) return;
+      const stage = parseInt(img.getAttribute("data-stage") || "0", 10);
+      const domain = img.getAttribute("data-domain") || "";
+      const name = img.getAttribute("data-name") || "CP";
+      const category = img.getAttribute("data-cat") || "";
+
+      if (stage === 0 && domain) {
+        img.setAttribute("data-stage", "1");
+        img.src = `https://favicon.im/${encodeURIComponent(domain)}?larger=true`;
+      } else {
+        img.onerror = null;
+        img.setAttribute("data-stage", "2");
+        img.src = getFallbackIconSvg(name, category);
+      }
+    }
+
+    function getItemsForThreeRows() {
+      const w = window.innerWidth;
+      if (w <= 480) return 8;
+      if (w <= 768) return 12;
+      if (w <= 1024) return 16;
+      if (w <= 1280) return 21;
+      return 27;
+    }
+
+    function sortSitesWithFavsFirst(sitesArray) {
+      return [...sitesArray].sort((a, b) => {
+        const aFav = favorites.indexOf(a.url);
+        const bFav = favorites.indexOf(b.url);
+        if (aFav !== -1 && bFav !== -1) return aFav - bFav;
+        if (aFav !== -1) return -1;
+        if (bFav !== -1) return 1;
+        return 0;
+      });
+    }
+
+    function renderContent() {
+      let sectionsToRender = [];
+      const regionSites = sitesData.filter(s => s.countries.includes(activeCountry));
+
+      if (activeCategory === "All") {
+        const subCategories = ["Movies & Shows", "Anime", "Manga", "Live TV & Sports", "Apps"];
+        sectionsToRender = subCategories.map(subCat => ({
+          rawCat: subCat,
+          name: categoryConfig[subCat].displayTitle || subCat,
+          subTag: categoryConfig[subCat].subTag || "",
+          banner: categoryConfig[subCat].banner,
+          icon: categoryConfig[subCat].icon,
+          sites: sortSitesWithFavsFirst(regionSites.filter(s => s.category === subCat))
+        })).filter(sec => sec.sites.length > 0);
+      } else {
+        sectionsToRender = [{
+          rawCat: activeCategory,
+          name: categoryConfig[activeCategory].displayTitle || activeCategory,
+          subTag: categoryConfig[activeCategory].subTag || "",
+          banner: categoryConfig[activeCategory].banner,
+          icon: categoryConfig[activeCategory].icon,
+          sites: sortSitesWithFavsFirst(regionSites.filter(s => s.category === activeCategory))
+        }];
+      }
+
+      const maxPreviewCount = getItemsForThreeRows();
+
+      mainContainer.innerHTML = sectionsToRender.map((sec, secIdx) => {
+        const isAllTab = activeCategory === "All";
+        const visibleSites = isAllTab ? sec.sites.slice(0, maxPreviewCount) : sec.sites;
+        const hiddenCount = sec.sites.length - visibleSites.length;
+
+        return `
+        <div class="section-card-wrapper" id="sec-${secIdx}">
+          <div class="banner-overlay" style="background-image: url(&quot;${sec.banner}&quot;);"></div>
+          <div class="section-header">
+            <div class="section-title-group">
+              <span class="section-icon">${sec.icon}</span>
+              <h2>${sec.name}</h2>
+              ${sec.subTag ? `<span class="section-subtag">${sec.subTag}</span>` : ''}
+            </div>
+            <span class="count-pill">${sec.sites.length} available</span>
+          </div>
+          <div class="grid">
+            ${visibleSites.length > 0 ? visibleSites.map((site, cardIdx) => {
+              const isFav = favorites.includes(site.url);
+              const primaryIcon = getSmartIcon(site);
+              const siteDomain = extractDomain(site.url);
+              const safeName = (site.name || "").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+              const animDelay = Math.min(cardIdx * 0.015, 0.25).toFixed(3);
+              return `
+                <div class="link-card" data-url="${site.url}" style="animation-delay: ${animDelay}s; ${isFav ? 'border-color: var(--accent-1); box-shadow: 0 8px 24px var(--glow);' : ''}" onclick="openSite('${site.url}', '${safeName}')" onmousemove="handleCardTilt(event, this)" onmouseleave="resetCardTilt(this)">
+                  <div class="card-top-row">
+                    ${site.badge ? `<span class="site-badge">${site.badge}</span>` : `<span></span>`}
+                    <div class="card-actions">
+                      <button type="button" class="action-btn ${isFav ? 'fav-active' : ''}" data-fav-url="${site.url}" onclick="toggleFav('${site.url}', event, this)" title="${isFav ? 'Unpin from Top' : 'Pin to Top'}">${isFav ? '♥' : '♡'}</button>
+                    </div>
+                  </div>
+                  <div class="card-content-center">
+                    <img class="favicon" src="${primaryIcon}" alt="${safeName}" data-stage="0" data-domain="${siteDomain}" data-name="${safeName}" data-cat="${site.category || ''}" loading="lazy" onload="handleIconLoad(this)" onerror="handleIconError(this)" />
+                    <span class="site-name">${site.name}</span>
+                  </div>
+                </div>
+              `;
+            }).join("") : `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted);">No matching streaming sites found for this region.</div>`}
+          </div>
+          ${isAllTab && hiddenCount > 0 ? `
+            <div class="more-btn-container">
+              <button type="button" class="more-category-btn" onclick="playClickSound(); switchCategory('${sec.rawCat}')">
+                <span>More ${sec.name} (+${hiddenCount})</span>
+                <span>→</span>
+              </button>
+            </div>
+          ` : ''}
+        </div>
+        `;
+      }).join("");
+
+      setTimeout(() => {
+        document.querySelectorAll('.section-card-wrapper').forEach((wrapper, idx) => {
+          setTimeout(() => wrapper.classList.add('visible'), idx * 80);
+        });
+      }, 30);
+    }
+
+    function handleCardTilt(e, card) {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+      const xc = rect.width / 2;
+      const yc = rect.height / 2;
+      const maxAngle = 10;
+      const rotateX = (-(y - yc) / yc) * maxAngle;
+      const rotateY = ((x - xc) / xc) * maxAngle;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.02)`;
+    }
+
+    function resetCardTilt(card) {
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)`;
+    }
+
+    const CONFIG_3D_Y_DESKTOP = 10.7;
+    const CONFIG_3D_Y_MOBILE  = 10.7;
+    const CONFIG_3D_Z = 1.2;
+
+    function getResponsiveBaseScale() {
+      const w = window.innerWidth;
+      if (w <= 480) return 0.23;
+      if (w <= 768) return 0.28;
+      if (w <= 1024) return 0.38;
+      if (w <= 1366) return 0.48;
+      return 0.58;
+    }
+
+    let scene, camera, renderer, shapesGroup, particlesMesh, backgroundRingsGroup;
+    let targetMouseX = 0, targetMouseY = 0;
+    let currentMouseX = 0, currentMouseY = 0;
+    let primaryWireMat, secondaryWireMat, particleMat, ringsMat;
+    let pointLight1, pointLight2, ambientLight;
+
+    function makeCanvasTexture(drawFn, w = 256, h = 256) {
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      const ctx = c.getContext('2d');
+      drawFn(ctx, w, h);
+      const tex = new THREE.CanvasTexture(c);
+      tex.needsUpdate = true;
+      return tex;
+    }
+
+    function createClapperboardModel(accentMat) {
+      const group = new THREE.Group();
+      const slateTex = makeCanvasTexture((ctx, w, h) => {
+        ctx.fillStyle = '#0b0e1a';
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.strokeRect(10, 10, w - 20, h - 20);
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 20px monospace';
+        ctx.fillText('COUCHPORT // SCENE 01', 12, 55);
+        ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(20, 80); ctx.lineTo(w - 20, 80);
+        ctx.moveTo(20, 135); ctx.lineTo(w - 20, 135);
+        ctx.moveTo(128, 80); ctx.lineTo(128, 190);
+        ctx.stroke();
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 20px monospace';
+        ctx.fillText('TAKE: 4K', 24, 115);
+        ctx.fillText('FPS: 60', 142, 115);
+      }, 256, 200);
+
+      const slateMat = new THREE.MeshStandardMaterial({ map: slateTex, roughness: 0.35, metalness: 0.3 });
+      const slateGeo = new THREE.BoxGeometry(3.6, 2.6, 0.28);
+      const slateMesh = new THREE.Mesh(slateGeo, slateMat);
+      group.add(slateMesh);
+
+      const stripeTex = makeCanvasTexture((ctx, w, h) => {
+        ctx.fillStyle = '#090b14';
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#f8fafc';
+        for (let i = -h; i < w; i += 48) {
+          ctx.beginPath();
+          ctx.moveTo(i, h);
+          ctx.lineTo(i + 24, h);
+          ctx.lineTo(i + 24 + h, 0);
+          ctx.lineTo(i + h, 0);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }, 256, 64);
+
+      const barMat = new THREE.MeshStandardMaterial({ map: stripeTex, roughness: 0.3 });
+      const bottomBar = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.4, 0.3), barMat);
+      bottomBar.position.set(0, 1.5, 0);
+      group.add(bottomBar);
+
+      const topBarPivot = new THREE.Group();
+      topBarPivot.position.set(-1.8, 1.7, 0);
+      const topBar = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.4, 0.3), barMat);
+      topBar.position.set(1.8, 0.2, 0);
+      topBarPivot.add(topBar);
+      topBarPivot.rotation.z = 0.28;
+      group.add(topBarPivot);
+
+      const outline = new THREE.LineSegments(new THREE.EdgesGeometry(slateGeo), accentMat);
+      outline.name = "outlineMesh";
+      outline.visible = false;
+      group.add(outline);
+
+      group.userData.category = "Movies & Shows";
+      return group;
+    }
+
+    function createKatanaModel(accentMat, secondaryMat) {
+      const group = new THREE.Group();
+      const bladeGeo = new THREE.BoxGeometry(0.18, 4.8, 0.06);
+      const bladeMat = new THREE.MeshStandardMaterial({
+        color: 0xf8fafc,
+        emissive: 0x38bdf8,
+        emissiveIntensity: 0.25,
+        metalness: 0.9,
+        roughness: 0.1
+      });
+      const blade = new THREE.Mesh(bladeGeo, bladeMat);
+      blade.position.y = 1.0;
+      group.add(blade);
+
+      const tsuba = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 0.12, 8), new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.8, roughness: 0.2 }));
+      tsuba.position.y = -1.4;
+      group.add(tsuba);
+
+      const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.8, 12), new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.6 }));
+      handle.position.y = -2.3;
+      group.add(handle);
+
+      for (let i = 0; i < 5; i++) {
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.04, 8, 16), secondaryMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.y = -1.6 - i * 0.32;
+        group.add(ring);
+      }
+
+      const slash = new THREE.Mesh(new THREE.TorusGeometry(2.3, 0.06, 8, 42, Math.PI * 1.15), accentMat);
+      slash.rotation.z = -0.6;
+      slash.rotation.x = 0.5;
+      group.add(slash);
+
+      group.scale.setScalar(0.78);
+      group.userData.category = "Anime";
+      return group;
+    }
+
+    function createMangaBookModel(accentMat) {
+      const group = new THREE.Group();
+      const pageTexLeft = makeCanvasTexture((ctx, w, h) => {
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#090b14';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(14, 14, w - 28, 95);
+        ctx.strokeRect(14, 122, (w - 36) / 2, 120);
+        ctx.strokeRect(22 + (w - 36) / 2, 122, (w - 36) / 2, 120);
+        ctx.strokeRect(14, 254, w - 28, 88);
+        ctx.fillStyle = '#090b14';
+        ctx.font = '900 34px sans-serif';
+        ctx.fillText('MANGA', 36, 74);
+        ctx.font = 'bold 28px sans-serif';
+        ctx.fillText('ドドド', 26, 195);
+      }, 256, 360);
+
+      const pageTexRight = makeCanvasTexture((ctx, w, h) => {
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#090b14';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(14, 14, w - 28, 155);
+        ctx.strokeRect(14, 182, w - 28, 160);
+        ctx.fillStyle = '#090b14';
+        ctx.font = '900 30px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('ゴゴゴ!!', w / 2, 100);
+      }, 256, 360);
+
+      const coverMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.4 });
+      const leftPageMat = new THREE.MeshStandardMaterial({ map: pageTexLeft, roughness: 0.3 });
+      const rightPageMat = new THREE.MeshStandardMaterial({ map: pageTexRight, roughness: 0.3 });
+
+      const leftWing = new THREE.Group();
+      leftWing.add(new THREE.Mesh(new THREE.BoxGeometry(2.0, 2.8, 0.12), coverMat));
+      const lp = new THREE.Mesh(new THREE.BoxGeometry(1.9, 2.65, 0.14), leftPageMat);
+      lp.position.set(0, 0, 0.04);
+      leftWing.add(lp);
+      leftWing.position.set(-1.0, 0, 0);
+      leftWing.rotation.y = 0.32;
+
+      const rightWing = new THREE.Group();
+      rightWing.add(new THREE.Mesh(new THREE.BoxGeometry(2.0, 2.8, 0.12), coverMat));
+      const rp = new THREE.Mesh(new THREE.BoxGeometry(1.9, 2.65, 0.14), rightPageMat);
+      rp.position.set(0, 0, 0.04);
+      rightWing.add(rp);
+      rightWing.position.set(1.0, 0, 0);
+      rightWing.rotation.y = -0.32;
+
+      const spine = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 2.82, 12), accentMat);
+      group.add(leftWing, rightWing, spine);
+
+      group.userData.category = "Manga";
+      return group;
+    }
+
+    function createStreamingTVModel(accentMat, secondaryMat) {
+      const group = new THREE.Group();
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x2d3748, metalness: 0.5, roughness: 0.35 });
+      const tvBox = new THREE.Mesh(new THREE.BoxGeometry(3.5, 2.3, 0.85), bodyMat);
+      group.add(tvBox);
+
+      const backPlate = new THREE.Mesh(new THREE.BoxGeometry(3.3, 2.1, 0.15), new THREE.MeshStandardMaterial({ color: 0x4a5568, metalness: 0.6 }));
+      backPlate.position.z = -0.44;
+      group.add(backPlate);
+
+      const screenMat = new THREE.MeshStandardMaterial({
+        color: 0x06b6d4,
+        emissive: 0x38bdf8,
+        emissiveIntensity: 0.35,
+        roughness: 0.15
+      });
+      const screen = new THREE.Mesh(new THREE.BoxGeometry(3.0, 1.8, 0.08), screenMat);
+      screen.position.z = 0.43;
+      group.add(screen);
+
+      const playGeo = new THREE.ConeGeometry(0.5, 0.8, 3);
+      playGeo.rotateZ(-Math.PI / 2);
+      const playMesh = new THREE.Mesh(playGeo, secondaryMat);
+      playMesh.position.set(0.08, 0, 0.65);
+      group.add(playMesh);
+
+      const antGeo = new THREE.CylinderGeometry(0.03, 0.03, 1.3, 8);
+      const ant1 = new THREE.Mesh(antGeo, accentMat);
+      ant1.position.set(-0.55, 1.55, 0);
+      ant1.rotation.z = 0.45;
+      const ant2 = new THREE.Mesh(antGeo, accentMat);
+      ant2.position.set(0.55, 1.55, 0);
+      ant2.rotation.z = -0.45;
+      group.add(ant1, ant2);
+
+      const outline = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(3.54, 2.34, 0.88)), accentMat);
+      outline.name = "outlineMesh";
+      outline.visible = false;
+      group.add(outline);
+
+      group.userData.category = "Live TV & Sports";
+      return group;
+    }
+
+    function createSmartphoneModel(accentMat) {
+      const group = new THREE.Group();
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x3b485e, metalness: 0.85, roughness: 0.25 });
+      const phoneGeo = new THREE.BoxGeometry(2.1, 4.2, 0.22);
+      const phoneMesh = new THREE.Mesh(phoneGeo, bodyMat);
+      group.add(phoneMesh);
+
+      const screenTex = makeCanvasTexture((ctx, w, h) => {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#0a0d1a');
+        grad.addColorStop(1, '#060810');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 15px sans-serif';
+        ctx.fillText('9:41', 20, 26);
+
+        ctx.fillStyle = '#05070e';
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(w / 2 - 28, 12, 56, 14, 7);
+        else ctx.rect(w / 2 - 28, 12, 56, 14);
+        ctx.fill();
+
+        const appIcons = [
+          ['#ea580c', '▶'], ['#8b5cf6', '✦'], ['#3b82f6', '⚡'], ['#10b981', '♫'],
+          ['#ec4899', '♥'], ['#f59e0b', '📱'], ['#06b6d4', '☁'], ['#6366f1', '★'],
+          ['#14b8a6', '⚙'], ['#f43f5e', '✉'], ['#a855f7', '∞'], ['#38bdf8', '🌐'],
+          ['#e11d48', '🔥'], ['#84cc16', '◈'], ['#f97316', '❖'], ['#0284c7', '◆']
+        ];
+        const cols = 4;
+        const iconSize = 34;
+        const startX = 22;
+        const startY = 56;
+        const gapX = 24;
+        const gapY = 22;
+
+        appIcons.forEach(([color, symbol], idx) => {
+          const col = idx % cols;
+          const row = Math.floor(idx / cols);
+          const x = startX + col * (iconSize + gapX);
+          const y = startY + row * (iconSize + gapY);
+
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(x, y, iconSize, iconSize, 8);
+          else ctx.rect(x, y, iconSize, iconSize);
+          ctx.fill();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 16px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(symbol, x + iconSize / 2, y + iconSize / 2 + 1);
+        });
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(16, h - 75, w - 32, 50, 14);
+        else ctx.rect(16, h - 75, w - 32, 50);
+        ctx.fill();
+      }, 256, 460);
+
+      const screenMesh = new THREE.Mesh(new THREE.BoxGeometry(1.96, 4.04, 0.04), new THREE.MeshStandardMaterial({ map: screenTex, roughness: 0.2, metalness: 0.1 }));
+      screenMesh.position.z = 0.115;
+      group.add(screenMesh);
+
+      const camBump = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.85, 0.08), new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.3 }));
+      camBump.position.set(-0.52, 1.45, -0.14);
+      group.add(camBump);
+
+      const outline = new THREE.LineSegments(new THREE.EdgesGeometry(phoneGeo), accentMat);
+      outline.name = "outlineMesh";
+      outline.visible = false;
+      group.add(outline);
+
+      group.scale.setScalar(0.48);
+      group.userData.category = 'Apps';
+      return group;
+    }
+
+    function createHeartModel(accentMat) {
+      const group = new THREE.Group();
+      const heartShape = new THREE.Shape();
+      const x = 0, y = 0;
+      heartShape.moveTo(x + 5, y + 5);
+      heartShape.bezierCurveTo(x + 5, y + 5, x + 4, y, x, y);
+      heartShape.bezierCurveTo(x - 6, y, x - 6, y + 7, x - 6, y + 7);
+      heartShape.bezierCurveTo(x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19);
+      heartShape.bezierCurveTo(x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7);
+      heartShape.bezierCurveTo(x + 16, y + 7, x + 16, y, x + 10, y);
+      heartShape.bezierCurveTo(x + 7, y, x + 5, y + 5, x + 5, y + 5);
+
+      const heartGeo = new THREE.ExtrudeGeometry(heartShape, { depth: 1.6, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.5, bevelThickness: 0.5 });
+      heartGeo.center();
+      heartGeo.rotateZ(Math.PI);
+      heartGeo.scale(0.155, 0.155, 0.155);
+
+      const heartMesh = new THREE.Mesh(heartGeo, new THREE.MeshStandardMaterial({ color: 0xf43f5e, emissive: 0xe11d48, emissiveIntensity: 0.22, roughness: 0.35, metalness: 0.35 }));
+      group.add(heartMesh);
+
+      const outline = new THREE.LineSegments(new THREE.EdgesGeometry(heartGeo), accentMat);
+      outline.name = "outlineMesh";
+      outline.visible = false;
+      group.add(outline);
+
+      group.userData.category = "Favorites";
+      return group;
+    }
+
+    function getCategoryTabCenterWorldX(tabName, fallbackX) {
+      try {
+        if (!camera) return fallbackX;
+        const tabs = Array.from(document.querySelectorAll('.cat-tab'));
+        const tab = tabs.find(t => {
+          const catAttr = t.getAttribute('data-cat') || '';
+          return catAttr.toLowerCase() === tabName.toLowerCase() || t.textContent.toLowerCase().includes(tabName.toLowerCase());
+        });
+        if (tab) {
+          const rect = tab.getBoundingClientRect();
+          const screenX = rect.left + rect.width / 2;
+          const normX = (screenX / window.innerWidth) * 2 - 1;
+          const dist = camera.position.z - CONFIG_3D_Z;
+          const halfHeight = Math.tan(((camera.fov * Math.PI) / 180) / 2) * dist;
+          const halfWidth = halfHeight * (window.innerWidth / window.innerHeight);
+          return normX * halfWidth;
+        }
+      } catch (e) {}
+      return fallbackX;
+    }
+
+    function getModelsLayout() {
+      const isMobile = window.innerWidth <= 768;
+      const commonLineY = isMobile ? CONFIG_3D_Y_MOBILE : CONFIG_3D_Y_DESKTOP;
+      const commonZ = CONFIG_3D_Z;
+      let allPositions = {};
+
+      const dist = camera ? (camera.position.z - CONFIG_3D_Z) : 24.8;
+      const halfWidth = Math.tan((60 * Math.PI) / 360) * dist * (window.innerWidth / window.innerHeight);
+
+      if (isMobile) {
+        const mobileSpan = halfWidth * 1.68;
+        const mobileSpacing = mobileSpan / 4;
+        const mobileStartX = -mobileSpan / 2;
+        allPositions = {
+          "Movies & Shows":   { x: mobileStartX + 0 * mobileSpacing, y: commonLineY, z: commonZ },
+          "Anime":            { x: mobileStartX + 1 * mobileSpacing, y: commonLineY, z: commonZ },
+          "Manga":            { x: mobileStartX + 2 * mobileSpacing, y: commonLineY, z: commonZ },
+          "Live TV & Sports": { x: mobileStartX + 3 * mobileSpacing, y: commonLineY, z: commonZ },
+          "Apps":             { x: mobileStartX + 4 * mobileSpacing, y: commonLineY, z: commonZ }
+        };
+      } else {
+        allPositions = {
+          "Movies & Shows":   { x: getCategoryTabCenterWorldX("Movies & Shows", -7.5), y: commonLineY, z: commonZ },
+          "Anime":            { x: getCategoryTabCenterWorldX("Anime", -2.2),          y: commonLineY, z: commonZ },
+          "Manga":            { x: getCategoryTabCenterWorldX("Manga", 3.2),           y: commonLineY, z: commonZ },
+          "Live TV & Sports": { x: getCategoryTabCenterWorldX("Live TV & Sports", 9.0), y: commonLineY, z: commonZ },
+          "Apps":             { x: getCategoryTabCenterWorldX("Apps", 14.5),          y: commonLineY, z: commonZ }
+        };
+      }
+      return { isMobile, allPositions };
+    }
+
+    function init3DBackground() {
+      const canvas = document.getElementById('bg-canvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 26;
+
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
+      scene.add(ambientLight);
+
+      pointLight1 = new THREE.PointLight(0xfbbf24, 2.5, 95);
+      pointLight1.position.set(-18, 14, 15);
+      scene.add(pointLight1);
+
+      pointLight2 = new THREE.PointLight(0xea580c, 2.2, 95);
+      pointLight2.position.set(18, -12, 15);
+      scene.add(pointLight2);
+
+      backgroundRingsGroup = new THREE.Group();
+      ringsMat = new THREE.MeshBasicMaterial({ color: 0xfde047, wireframe: true, transparent: true, opacity: 0.16 });
+      const ring1 = new THREE.Mesh(new THREE.TorusGeometry(16, 0.12, 8, 48), ringsMat);
+      ring1.position.set(-14, 2, -35);
+      ring1.rotation.x = 0.8;
+      const ring2 = new THREE.Mesh(new THREE.TorusGeometry(20, 0.15, 8, 48), ringsMat);
+      ring2.position.set(14, -4, -38);
+      ring2.rotation.y = -0.7;
+      backgroundRingsGroup.add(ring1, ring2);
+      scene.add(backgroundRingsGroup);
+
+      shapesGroup = new THREE.Group();
+      scene.add(shapesGroup);
+
+      primaryWireMat = new THREE.MeshStandardMaterial({
+        color: 0xfbbf24,
+        emissive: 0xfbbf24,
+        emissiveIntensity: 0.28,
+        roughness: 0.25,
+        metalness: 0.6
+      });
+
+      secondaryWireMat = new THREE.MeshStandardMaterial({
+        color: 0xea580c,
+        emissive: 0xea580c,
+        emissiveIntensity: 0.28,
+        roughness: 0.25,
+        metalness: 0.6
+      });
+
+      const models = [
+        { mesh: createClapperboardModel(primaryWireMat), category: "Movies & Shows" },
+        { mesh: createKatanaModel(primaryWireMat, secondaryWireMat), category: "Anime" },
+        { mesh: createMangaBookModel(primaryWireMat), category: "Manga" },
+        { mesh: createStreamingTVModel(primaryWireMat, secondaryWireMat), category: "Live TV & Sports" },
+        { mesh: createSmartphoneModel(primaryWireMat), category: "Apps" }
+      ];
+
+      models.forEach((item, idx) => {
+        const obj = item.mesh;
+        const baseRotY = 0.0055 * ((idx % 3 === 0) ? 1 : -1);
+
+        const selectHalo = new THREE.Mesh(new THREE.TorusGeometry(1.65, 0.025, 8, 36), primaryWireMat);
+        selectHalo.rotation.x = Math.PI / 2;
+        selectHalo.position.y = -2.1;
+        selectHalo.name = "selectHalo";
+        selectHalo.visible = false;
+        obj.add(selectHalo);
+
+        obj.userData = {
+          ...obj.userData,
+          category: item.category,
+          baseRotSpeedY: baseRotY,
+          rotSpeedX: 0.0025 * ((idx % 2 === 0) ? 1 : -1),
+          rotSpeedY: baseRotY,
+          floatOffset: idx * 0.85,
+          targetScale: 0.0001,
+          targetX: 0,
+          targetY: CONFIG_3D_Y_DESKTOP,
+          targetZ: CONFIG_3D_Z
+        };
+        obj.position.set(0, CONFIG_3D_Y_DESKTOP, CONFIG_3D_Z);
+        obj.scale.setScalar(0.0001);
+        shapesGroup.add(obj);
+      });
+
+      update3DCategoryTargets();
+
+      const particleCount = 800;
+      const posArray = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        posArray[i] = (Math.random() - 0.5) * 115;
+        posArray[i + 1] = (Math.random() - 0.5) * 85;
+        posArray[i + 2] = (Math.random() - 0.5) * 55 - 12;
+      }
+      const particlesGeo = new THREE.BufferGeometry();
+      particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+      particleMat = new THREE.PointsMaterial({ size: 0.18, color: 0xe879f9, transparent: true, opacity: 0.65 });
+      particlesMesh = new THREE.Points(particlesGeo, particleMat);
+      scene.add(particlesMesh);
+
+      const activeTheme = document.body.getAttribute('data-theme') || 'purple';
+      if (paletteMap[activeTheme]) {
+        update3DPalette(paletteMap[activeTheme][0], paletteMap[activeTheme][1], paletteMap[activeTheme][2]);
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        targetMouseY = -(e.clientY / window.innerHeight - 0.5) * 2;
+      });
+
+      window.addEventListener('resize', () => {
+        if (!camera || !renderer) return;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        update3DCategoryTargets();
+      });
+
+      animate3D();
+    }
+
+    function update3DCategoryTargets() {
+      if (!shapesGroup) return;
+      const { isMobile, allPositions } = getModelsLayout();
+      const baseScale = getResponsiveBaseScale();
+
+      shapesGroup.children.forEach((mesh) => {
+        if (isMobile) {
+          mesh.visible = false;
+          mesh.userData.targetScale = 0.0001;
+          mesh.scale.setScalar(0.0001);
+          return;
+        }
+
+        mesh.visible = true;
+        const cat = mesh.userData.category;
+        const pos = allPositions[cat] || { x: 0, y: CONFIG_3D_Y_DESKTOP, z: CONFIG_3D_Z };
+
+        mesh.userData.targetX = pos.x;
+        mesh.userData.targetZ = pos.z;
+
+        if (activeCategory === "All") {
+          mesh.userData.targetScale = baseScale;
+          mesh.userData.targetY = pos.y;
+        } else if (cat === activeCategory) {
+          mesh.userData.targetScale = baseScale * 1.35;
+          mesh.userData.targetY = pos.y + 0.48;
+        } else {
+          mesh.userData.targetScale = baseScale * 0.88;
+          mesh.userData.targetY = pos.y;
+        }
+      });
+    }
+
+    function update3DPalette(hex1, hex2, hex3) {
+      if (primaryWireMat && secondaryWireMat) {
+        primaryWireMat.color.setHex(hex1);
+        primaryWireMat.emissive.setHex(hex1);
+        secondaryWireMat.color.setHex(hex2);
+        secondaryWireMat.emissive.setHex(hex2);
+      }
+      if (pointLight1 && pointLight2) {
+        pointLight1.color.setHex(hex1);
+        pointLight2.color.setHex(hex2);
+      }
+      if (particleMat && hex3) {
+        particleMat.color.setHex(hex3);
+      }
+      if (ringsMat && hex2) {
+        ringsMat.color.setHex(hex2);
+      }
+      update3DCategoryTargets();
+    }
+
+    function animate3D() {
+      if (!is3DRunning) return;
+      if (!renderer || !scene || !camera) return;
+      animFrameId = requestAnimationFrame(animate3D);
+
+      const time = performance.now();
+      currentMouseX += (targetMouseX - currentMouseX) * 0.05;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.05;
+
+      if (backgroundRingsGroup && backgroundRingsGroup.children.length >= 2) {
+        backgroundRingsGroup.children[0].rotation.z = time * 0.00025;
+        backgroundRingsGroup.children[1].rotation.x = time * -0.00020;
+      }
+
+      if (shapesGroup) {
+        shapesGroup.position.x = currentMouseX * 0.35;
+        shapesGroup.position.y = currentMouseY * 0.15;
+
+        shapesGroup.children.forEach((mesh) => {
+          const isSelected = (activeCategory !== "All" && mesh.userData.category === activeCategory);
+          const isAll = (activeCategory === "All");
+
+          const currentRotSpeed = isSelected ? (mesh.userData.baseRotSpeedY * 2.2) : (isAll ? mesh.userData.baseRotSpeedY : mesh.userData.baseRotSpeedY * 0.75);
+          mesh.rotation.y += currentRotSpeed;
+
+          mesh.position.x += (mesh.userData.targetX - mesh.position.x) * 0.09;
+          mesh.position.z += (mesh.userData.targetZ - mesh.position.z) * 0.09;
+
+          const floatOffset = Math.sin(time * 0.002 + mesh.userData.floatOffset) * (isSelected ? 0.28 : 0.16);
+          mesh.position.y += (mesh.userData.targetY + floatOffset - mesh.position.y) * 0.09;
+
+          const currentS = mesh.scale.x;
+          const targetS = mesh.userData.targetScale;
+          const newS = currentS + (targetS - currentS) * 0.09;
+          mesh.scale.setScalar(Math.max(0.0001, newS));
+
+          const halo = mesh.getObjectByName("selectHalo");
+          if (halo) {
+            halo.visible = isSelected;
+            if (isSelected) halo.rotation.z += 0.02;
+          }
+
+          const outline = mesh.getObjectByName("outlineMesh");
+          if (outline) {
+            outline.visible = isSelected;
+          }
+        });
+      }
+
+      if (particlesMesh) {
+        particlesMesh.rotation.y = time * 0.00008 + currentMouseX * 0.08;
+        particlesMesh.rotation.x = currentMouseY * 0.06;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function update3DState() {
+      const tabHidden = document.hidden;
+      const isMobile = window.innerWidth <= 768;
+      const shouldRun = is3DUserEnabled && !tabHidden;
+      const btn = document.getElementById('toggle-3d-btn');
+
+      if (isMobile && shapesGroup) {
+        shapesGroup.children.forEach(m => {
+          m.visible = false;
+          m.scale.setScalar(0.0001);
+        });
+      }
+
+      if (shouldRun) {
+        if (!is3DRunning) {
+          is3DRunning = true;
+          if (btn) {
+            btn.classList.remove('paused');
+            btn.innerHTML = '<span id="toggle-3d-icon" style="color:var(--accent-1); font-size:0.92rem;">✦</span> <span>3D</span>';
+          }
+          if (animFrameId) cancelAnimationFrame(animFrameId);
+          animate3D();
+        }
+      } else {
+        if (is3DRunning || animFrameId) {
+          is3DRunning = false;
+          if (btn) {
+            btn.classList.add('paused');
+            btn.innerHTML = '<span id="toggle-3d-icon" style="opacity:0.6; font-size:0.85rem;">⏸</span> <span>3D</span>';
+          }
+          if (animFrameId) {
+            cancelAnimationFrame(animFrameId);
+            animFrameId = null;
+          }
+        }
+      }
+    }
+
+    function toggle3DMotion() {
+      is3DUserEnabled = !is3DUserEnabled;
+      update3DState();
+    }
+
+    document.addEventListener('visibilitychange', () => { update3DState(); });
+
+    let currentPortalUrl = "";
+    let currentPortalName = "";
+
+    function savePortalState(url, name) {
+      currentPortalUrl = url;
+      currentPortalName = name || extractDomain(url) || "Streaming Portal";
+      const extLink = document.getElementById("portal-external-link");
+      if (extLink) extLink.href = url;
+      try {
+        localStorage.setItem("couchport_open_portal", JSON.stringify({ url: currentPortalUrl, name: currentPortalName }));
+        sessionStorage.setItem("couchport_open_portal", JSON.stringify({ url: currentPortalUrl, name: currentPortalName }));
+      } catch (e) {}
+      syncUrlHashState({ url: currentPortalUrl, name: currentPortalName });
+    }
+
+    function openSite(url, siteName, skipSound) {
+      if (!skipSound) playClickSound();
+      const targetUrl = url.startsWith("http") ? url : "https://" + url;
+      const resolvedName = siteName || extractDomain(targetUrl) || "Streaming Portal";
+
+      const modal = document.getElementById("site-portal-modal");
+      const iframe = document.getElementById("portal-iframe");
+      const titleEl = document.getElementById("portal-site-title");
+
+      if (titleEl) titleEl.textContent = resolvedName;
+      savePortalState(targetUrl, resolvedName);
+      if (iframe && iframe.src !== targetUrl) iframe.src = targetUrl;
+      if (modal) {
+        modal.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+    }
+
+    function handlePortalIframeLoad() {
+      const iframe = document.getElementById("portal-iframe");
+      if (!iframe || !currentPortalUrl) return;
+      try {
+        const href = iframe.contentWindow.location.href;
+        if (href && href !== "about:blank" && href.startsWith("http")) {
+          savePortalState(href, currentPortalName);
+        }
+      } catch (e) {
+        // Cross-origin frame security prevents reading internal path automatically
+      }
+    }
+
+    function navigatePortalHistory(delta) {
+      playClickSound();
+      try {
+        window.history.go(delta);
+      } catch (e) {}
+    }
+
+    function reloadPortalFrame() {
+      playClickSound();
+      const iframe = document.getElementById("portal-iframe");
+      if (!iframe || !currentPortalUrl) return;
+
+      // Reload ONLY the embedded iframe player, never the main CouchPort website
+      try {
+        if (iframe.contentWindow && iframe.contentWindow.location && iframe.contentWindow.location.href !== "about:blank") {
+          iframe.contentWindow.location.reload();
+          showToast("Reloading Player ↻");
+          return;
+        }
+      } catch (e) {
+        // Cross-origin frame: reload the iframe element itself without touching window.location
+      }
+
+      const activeSrc = iframe.getAttribute("src") || currentPortalUrl;
+      iframe.src = activeSrc;
+      showToast("Reloading Player ↻");
+    }
+
+    function closeSitePortal() {
+      playClickSound();
+      currentPortalUrl = "";
+      currentPortalName = "";
+      const modal = document.getElementById("site-portal-modal");
+      const iframe = document.getElementById("portal-iframe");
+      if (modal) modal.classList.remove("open");
+      if (iframe) iframe.src = "about:blank";
+      document.body.style.overflow = "";
+      try {
+        localStorage.removeItem("couchport_open_portal");
+        sessionStorage.removeItem("couchport_open_portal");
+      } catch (e) {}
+      syncUrlHashState(null);
+    }
+
+    function initFirstTimeCountryModal() {
+      const modal = document.getElementById("country-welcome-modal");
+      const grid = document.getElementById("country-welcome-grid");
+      if (!modal || !grid) return;
+
+      grid.innerHTML = regionsList.map(r => `
+        <button type="button" class="country-choice-btn ${r.code === activeCountry ? 'active' : ''}" onclick="chooseInitialCountry('${r.code}')">
+          <img class="dropdown-flag" src="${r.flag}" alt="${r.name}" loading="lazy" />
+          <span>${r.name}</span>
+        </button>
+      `).join("");
+
+      let hasSelectedRegion = false;
+      try {
+        hasSelectedRegion = !!localStorage.getItem("couchport_region_selected");
+      } catch (e) {}
+
+      if (!hasSelectedRegion) {
+        setTimeout(() => modal.classList.add("open"), 200);
+      }
+    }
+
+    function chooseInitialCountry(code) {
+      playClickSound();
+      activeCountry = code;
+      try {
+        localStorage.setItem("couchport_region", code);
+        localStorage.setItem("couchport_region_selected", "1");
+      } catch (e) {}
+      const modal = document.getElementById("country-welcome-modal");
+      if (modal) modal.classList.remove("open");
+      renderCountryDropdown();
+      renderCategoriesBar();
+      renderContent();
+    }
+
+    function bootstrapApp() {
+      try {
+        const savedTheme = localStorage.getItem('couchport_theme');
+        const validTheme = (savedTheme && paletteMap[savedTheme]) ? savedTheme : 'purple';
+        setTheme(validTheme);
+
+        const savedCountry = localStorage.getItem('couchport_region');
+        if (savedCountry && regionsList.some(r => r.code === savedCountry)) {
+          activeCountry = savedCountry;
+        } else {
+          activeCountry = 'US';
+        }
+
+        const savedCat = localStorage.getItem('couchport_active_cat');
+        if (savedCat && categoriesList.includes(savedCat)) {
+          activeCategory = savedCat;
+        }
+
+        if (window.location.hash && window.location.hash.length > 1) {
+          const hashParams = new URLSearchParams(window.location.hash.slice(1));
+          const hashCat = hashParams.get("cat");
+          if (hashCat && categoriesList.includes(hashCat)) {
+            activeCategory = hashCat;
+          }
+        }
+      } catch (e) {
+        setTheme('purple');
+        activeCountry = 'US';
+      }
+
+      renderThemeDropdown();
+      renderCountryDropdown();
+      renderCategoriesBar();
+      renderContent();
+      checkNoticeDockStatus();
+      checkBookmarkPopupStatus();
+      initFirstTimeCountryModal();
+      hydrateCachedImages();
+      init3DBackground();
+
+      const portalIframeEl = document.getElementById("portal-iframe");
+      if (portalIframeEl) {
+        portalIframeEl.addEventListener("load", handlePortalIframeLoad);
+      }
+
+      try {
+        let portalToOpen = null;
+        if (window.location.hash && window.location.hash.length > 1) {
+          const hashParams = new URLSearchParams(window.location.hash.slice(1));
+          const hashPortal = hashParams.get("portal");
+          if (hashPortal) {
+            portalToOpen = { url: hashPortal, name: hashParams.get("name") || "" };
+          }
+        }
+        if (!portalToOpen) {
+          const savedPortalRaw = localStorage.getItem("couchport_open_portal");
+          if (savedPortalRaw) {
+            portalToOpen = JSON.parse(savedPortalRaw);
+          }
+        }
+        if (portalToOpen && portalToOpen.url) {
+          openSite(portalToOpen.url, portalToOpen.name, true);
+        }
+      } catch (e) {}
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      bootstrapApp();
+    } else {
+      window.addEventListener('DOMContentLoaded', bootstrapApp);
+    }
+  </script>
+</body>
+</html>
